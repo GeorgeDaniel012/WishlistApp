@@ -6,13 +6,14 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+
   useEffect(() => {
-    fetch('http://192.168.2.239:3000')
+    fetch('https://6360-86-123-32-103.ngrok-free.app') //modify ngrok link after regenerating
       .then(response => {
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
-        return response.text(); // Modify this line to response.text()
+        return response.text(); 
       })
       .then(data => {
         setData(data);
