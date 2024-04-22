@@ -30,20 +30,23 @@ const App = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={style.container}>
       {loading ? (
         <Text>Loading...</Text>
       ) : error ? (
         <Text>Error: {error.message}</Text>
       ) : (
-        <Text>{data}</Text>
+        <View style={style.container}>
+          <Text>{data}</Text>
+          <MyButton text='Button test' color='red' onPress = {handlePress}/>
+        </View>
+
       )}
-      <MyButton text='Button test' color='red' onPress = {handlePress}/>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const style = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
