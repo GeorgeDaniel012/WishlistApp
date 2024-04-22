@@ -5,6 +5,7 @@ const fs = require('fs');
 
 let IGDB_CLIENT_ID = null;
 let IGDB_ACCESS_TOKEN = null;
+let sql_password = null;
 
 const axios = require('axios');
 
@@ -13,6 +14,7 @@ try {
   const config = JSON.parse(configData);
   IGDB_CLIENT_ID = config.IGDB_CLIENT_ID;
   IGDB_ACCESS_TOKEN = config.IGDB_ACCESS_TOKEN;
+  sql_password = config.sql_password;
 } catch (err) {
     console.error('Error reading config file:', err);
 }
@@ -121,7 +123,7 @@ const PORT = 3000;
 const sequelize = new Sequelize('WishlistDB', 'root', '', {
   dialect: 'mysql',
   host: 'localhost',
-  password: 'parola_buna312'
+  password: sql_password
 });
 
 const User = sequelize.define('User', {

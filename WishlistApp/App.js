@@ -12,7 +12,10 @@ const App = () => {
   };
 
   useEffect(() => {
-    fetch('https://6360-86-123-32-103.ngrok-free.app') //modify ngrok link after regenerating
+    const configData = fs.readFileSync('config.json');
+    const config = JSON.parse(configData);
+    connection = config.connection;
+    fetch(connection)
       .then(response => {
         if (!response.ok) {
           throw new Error('Failed to fetch data');
