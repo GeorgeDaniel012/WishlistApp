@@ -1,5 +1,8 @@
 const express = require('express');
 const { Sequelize } = require('sequelize');
+const bodyParser = require('body-parser');
+const wishlistRoutes = require('./routers/wishlistRoutes.js')
+
 const app = express();
 const fs = require('fs');
 
@@ -146,6 +149,10 @@ app.post('/users', async (req, res) => {
   const user = await User.create({ name, email });
   res.json(user);
 });
+app.use(bodyParser.json());
+
+
+app.use('/wishlist', wishlistRoutes);
 
 // Define a route that responds with a message
 app.get('/', (req, res) => {
