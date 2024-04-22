@@ -12,7 +12,10 @@ const App = () => {
   };
 
   useEffect(() => {
-    fetch('https://6360-86-123-32-103.ngrok-free.app') //modify ngrok link after regenerating
+    const configData = fs.readFileSync('config.json');
+    const config = JSON.parse(configData);
+    connection = config.connection;
+    fetch(connection)
       .then(response => {
         if (!response.ok) {
           throw new Error('Failed to fetch data');
@@ -30,20 +33,23 @@ const App = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={style.container}>
       {loading ? (
         <Text>Loading...</Text>
       ) : error ? (
         <Text>Error: {error.message}</Text>
       ) : (
-        <Text>{data}</Text>
+        <View style={style.container}>
+          <Text>{data}</Text>
+          <MyButton text='Button test' color='red' onPress = {handlePress}/>
+        </View>
+
       )}
-      <MyButton text='Button test' color='red' onPress = {handlePress}/>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const style = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
