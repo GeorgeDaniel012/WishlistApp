@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet , Button, Alert} from 'react-native';
 import MyButton from './components/MyButton';
+import configData from "./config.json";
+
 
 const App = () => {
   const [data, setData] = useState(null);
@@ -12,9 +14,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    const configData = fs.readFileSync('config.json');
-    const config = JSON.parse(configData);
-    connection = config.connection;
+    connection = configData.connection;
     fetch(connection)
       .then(response => {
         if (!response.ok) {
