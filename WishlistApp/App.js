@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet , Button, Alert} from 'react-native';
+import { View, Text, StyleSheet , Button, Alert, SafeAreaView, Dimensions} from 'react-native';
 import MyButton from './components/MyButton';
 import configData from "./config.json";
-
+import MyComponent from './components/MyComponent';
 
 const App = () => {
   const [data, setData] = useState(null);
@@ -39,10 +39,9 @@ const App = () => {
       ) : error ? (
         <Text>Error: {error.message}</Text>
       ) : (
-        <View style={style.container}>
-          <Text>{data}</Text>
-          <MyButton text='Button test' color='red' onPress = {handlePress}/>
-        </View>
+        <SafeAreaView style={style.container}>
+            <MyComponent />
+        </SafeAreaView>
 
       )}
     </View>
@@ -52,9 +51,12 @@ const App = () => {
 const style = StyleSheet.create({
   container: {
     flex: 1,
+    //height: windowHeight * 0.9,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor:  '#ADD8E6'
   },
+
 });
 
 export default App;
