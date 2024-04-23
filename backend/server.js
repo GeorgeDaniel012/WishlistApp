@@ -9,6 +9,7 @@ const fs = require('fs');
 let IGDB_CLIENT_ID = null;
 let IGDB_ACCESS_TOKEN = null;
 let sql_password = null;
+let dbName = null;
 
 const axios = require('axios');
 
@@ -18,6 +19,7 @@ try {
   IGDB_CLIENT_ID = config.IGDB_CLIENT_ID;
   IGDB_ACCESS_TOKEN = config.IGDB_ACCESS_TOKEN;
   sql_password = config.sql_password;
+  dbName = config.db_name;
 } catch (err) {
     console.error('Error reading config file:', err);
 }
@@ -123,7 +125,7 @@ fetchGameImages(425); // Replace 123 with the actual game ID you want to fetch i
 
 const PORT = 3000;
 
-const sequelize = new Sequelize('WishlistDB', 'root', '', {
+const sequelize = new Sequelize(dbName, 'root', '', {
   dialect: 'mysql',
   host: 'localhost',
   password: sql_password
