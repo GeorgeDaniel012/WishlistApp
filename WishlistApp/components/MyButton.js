@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Button, Alert, SafeAreaView, Dimensions} from 'react-native';
+import { View, TextInput, Text, StyleSheet, TouchableOpacity, Button, Alert, SafeAreaView, Dimensions} from 'react-native';
 
 const MyButton = ({navigation, route}) => {
   const handlePress = () => {
@@ -9,13 +9,25 @@ const MyButton = ({navigation, route}) => {
 
   const { width, height } = Dimensions.get('window');
   const font_size=width*0.05;
-  const content = (
-    <View style = {styles.container}>
-      <TouchableOpacity style={[styles.buttonContainer, {backgroundColor: route.params.color}]} onPress={handlePress}>
+  const content =
+  // (
+  //   <View style = {styles.container}>
+  //     <TouchableOpacity style={[styles.buttonContainer, {backgroundColor: route.params.color}]} onPress={handlePress}>
+  //       <View style={[styles.button]}>
+  //         <Text style={[styles.text, {fontSize: font_size}, {color:'rgb(0,0,0)'}]}>{route.params.text}</Text>
+  //       </View> 
+  //     </TouchableOpacity>
+  //   </View>
+  // )
+  (
+    <View>
+    {/* <View style = {styles.container}> */}
+      {/* <TouchableOpacity style={[styles.buttonContainer, {backgroundColor: route.params.color}]} onPress={handlePress}>
         <View style={[styles.button]}>
           <Text style={[styles.text, {fontSize: font_size}, {color:'rgb(0,0,0)'}]}>{route.params.text}</Text>
         </View> 
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+      <Button title="Search" onPress={handlePress} style = {styles.button}/>
     </View>
   )
 
@@ -26,19 +38,22 @@ const styles = StyleSheet.create({
   container: {
     paddingLeft: 16,
     paddingRight: 16,
+    paddingTop: 16,
     flex: 1,
     //justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     backgroundColor:  '#ADD8E6'
   },
   buttonContainer: {
-    width: '50%',
+    width: '90%',
     //justifyContent: 'center', // center horizontally
     alignItems: 'center', // center vertically
     marginTop: '10%',
     //marginBottom: 'auto',
   },
   button:{
+    width: '100%',
+    marginTop: '10%',
     borderRadius: 20,
     alignItems: 'center',
     width: '100%' // button takes full width of the container

@@ -5,10 +5,16 @@ import { View, Text, StyleSheet , Button, Alert, SafeAreaView, Dimensions} from 
 import MyButton from './components/MyButton';
 import configData from "./config.json";
 import MyComponent from './components/MyComponent';
+import HomeScreen from './components/HomeScreen';
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
+  // const handlePress = () => {
+  //   //Alert.alert('Button pressed!');
+  //   navigation.navigate('Search');
+  // };
+
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -47,7 +53,7 @@ const App = () => {
     // </View>
     <NavigationContainer>
       <Stack.Navigator 
-        initialRouteName='Home'
+        initialRouteName='Wishlist'
         screenOptions={{
           headerStyle: {
             backgroundColor: 'rgba(0, 75, 128, 50)', // Change this to the color you want
@@ -60,16 +66,20 @@ const App = () => {
         >
         <Stack.Screen
           name = "Wishlist"
-          component = {MyButton}
+          component = {HomeScreen}
           // options = {{
           //   onPress: handlePress(),
           //   color: 'rgb(128,128,128)'
           // }}
           // onPress = {handlePress()}
           // color = 'rgb(128,128,128)'
-          initialParams={{
-            color: 'rgb(128,128,128)',
-            text: 'Search' }}
+          // initialParams={{
+          //   color: 'rgb(128,128,128)',
+          //   text: 'Search' }}
+          options={({ navigation }) => ({
+            title: 'Wishlist',
+            headerRight: () => <MyButton navigation={navigation} />,
+          })}
           style = {styles.button}
         />
         <Stack.Screen
@@ -90,7 +100,7 @@ const styles = StyleSheet.create({
     backgroundColor:  '#ADD8E6'
   },
   button: {
-    width: '50%',
+    //width: '50%',
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'flex-end'

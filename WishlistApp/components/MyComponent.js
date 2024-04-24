@@ -34,6 +34,7 @@ const MyComponent = () => {
           <View style={styles.header}>
             <View style={styles.searchContainer}>
               <TextInput
+                autoFocus = {true}
                 style={styles.input}
                 placeholder="Enter your search query"
                 onChangeText={text => setSearchQuery(text)}
