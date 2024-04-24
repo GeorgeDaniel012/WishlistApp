@@ -7,7 +7,6 @@ const router = express.Router();
 try {
     const configData = fs.readFileSync('./config.json');
     const config = JSON.parse(configData);
-    console.log(config);
     IGDB_CLIENT_ID = config.IGDB_CLIENT_ID;
     IGDB_ACCESS_TOKEN = config.IGDB_ACCESS_TOKEN;
   } catch (err) {
@@ -36,27 +35,7 @@ async function fetchGameInfo() {
     }
   }
   
-  // Function to fetch a game by ID from IGDB API
-  async function fetchGameInfoById(gameId) {
-    try {
-      // Make a POST request to the IGDB API
-      const response = await axios({
-        url: `https://api.igdb.com/v4/games/`,
-        method: 'POST',
-        headers: {
-          'Client-ID': IGDB_CLIENT_ID,
-          'Authorization': `Bearer ${IGDB_ACCESS_TOKEN}`,
-          'Accept': 'application/json'
-        },
-        data: `fields *; where id = ${gameId};`
-      });
   
-      // Process the response data
-      console.log(response.data);
-    } catch (error) {
-      console.error('Error fetching game from IGDB API:', error);
-    }
-  }
   
   // Function to fetch a game by ID from IGDB API
   async function fetchGameInfoByName(gameName) {
@@ -116,8 +95,7 @@ async function fetchGameInfo() {
       //console.log(response.data);
       let id = response.data[0].image_id;
       let url = response.data[0].url;
-      let urlModified = "https:" + url.replace("t_thumb", "t_cover_big");
-      console.log(urlModified);
+      let urlModified = "https:" + url.replace("t_thumb", "t_1080p");
 
       return urlModified;
     } catch (error) {
@@ -163,17 +141,119 @@ async function fetchGameInfo() {
     }
 
   }
-       
-// Call the function to fetch images for a game by ID
-//fetchGameImages(425); // Replace 123 with the actual game ID you want to fetch images for
-//fetchGameInfoByName("league");
-//fetchGameInfoById(36308)
 
+// Function to fetch a game by ID from IGDB API
+async function fetchGameInfoById(gameId) {
+  try {
+    // Make a POST request to the IGDB API
+    const response = await axios({
+      url: `https://api.igdb.com/v4/games/`,
+      method: 'POST',
+      headers: {
+        'Client-ID': IGDB_CLIENT_ID,
+        'Authorization': `Bearer ${IGDB_ACCESS_TOKEN}`,
+        'Accept': 'application/json'
+      },
+      data: `fields id, name, summary, genres, platforms, screenshots.*; where id = ${gameId};`
+    });
+    imageUrl = await fetchGameImage(gameId);
+    // Process the response data
+    response.data[0].imageUrl = imageUrl;
+    response.data[0].genres = await fetchGenreNames(response.data[0].genres);
+    response.data[0].platforms = await fetchPlatformNames(response.data[0].platforms);
+    response.data[0].screenshots = response.data[0].screenshots.map(screenshot => "https:" + screenshot.url.replace("t_thumb", "t_cover_big"));
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching game from IGDB API:', error);
+  }
+}
+
+
+async function fetchGenreNames(genreIds) {
+  try {
+    const response = await axios({
+      url: 'https://api.igdb.com/v4/genres/',
+      method: 'POST',
+      headers: {
+        'Client-ID': IGDB_CLIENT_ID,
+        'Authorization': `Bearer ${IGDB_ACCESS_TOKEN}`,
+        'Accept': 'application/json'
+      },
+      data: `fields name; limit 50; where id = ${JSON.stringify(genreIds).replace("[", "(").replace("]", ")")};`
+    });
+
+    // Process the response data
+    const transformedArray = response.data.map(elem => elem.name);
+    return transformedArray;
+
+
+  } catch (error) {
+    console.error('Error fetching genre info from IGDB API:', error);
+    return null;
+  }
+
+}
+
+async function fetchPlatformNames(platformIds) {
+  try {
+    const response = await axios({
+      url: 'https://api.igdb.com/v4/platforms',
+      method: 'POST',
+      headers: {
+        'Client-ID': IGDB_CLIENT_ID,
+        'Authorization': `Bearer ${IGDB_ACCESS_TOKEN}`,
+        'Accept': 'application/json'
+      },
+      data: `fields name; limit 50; where id = ${JSON.stringify(platformIds).replace("[", "(").replace("]", ")")};`
+    });
+
+    // Process the response data
+    const transformedArray = response.data.map(elem => elem.name);
+    return transformedArray;
+
+
+  } catch (error) {
+    console.error('Error fetching genre info from IGDB API:', error);
+    return null;
+  }
+
+}
+
+
+async function fetchGameScreenshots(gameId) {
+  try {
+    // Make a POST request to the IGDB API for artwork
+    const response = await axios({
+      url: 'https://api.igdb.com/v4/covers/',
+      method: 'POST',
+      headers: {
+        'Client-ID': IGDB_CLIENT_ID,
+        'Authorization': `Bearer ${IGDB_ACCESS_TOKEN}`,
+        'Accept': 'application/json'
+      },
+      data: `fields *; where game = ${gameId};`
+    });
+
+    // Process the response data
+    //console.log(response.data);
+    let id = response.data[0].image_id;
+    let url = response.data[0].url;
+    let urlModified = "https:" + url.replace("t_thumb", "t_1080p");
+
+    return urlModified;
+  } catch (error) {
+    console.error('Error fetching game images from IGDB API:', error);
+    return null;
+  }
+
+}
 
 //Testing
 /*(async ()=>{
-    let test=await fetchGameInfoByName("halo");
+    let test=await fetchGameInfoById(123);
     console.log(test);
+
+    //fetchGenreNames([12,31]);
 })();*/
 
 //fetchGameImages([425, 40112]);
@@ -190,6 +270,17 @@ router.get('/:searchString', async (req, res) => {
         console.error('Error contacting IGDB api:', error);
         res.status(500).json({ message: 'Error contacting IGDB api' });
     }
+});
+
+router.get('/id/:gameId', async (req, res) => {
+  try {
+      const id = req.params.gameId;
+      const game = await fetchGameInfoById(id);
+      res.json(game);
+  } catch (error) {
+      console.error('Error contacting IGDB api:', error);
+      res.status(500).json({ message: 'Error contacting IGDB api' });
+  }
 });
 
 module.exports = router;
