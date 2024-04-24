@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, Alert, Dimensions } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet, TextInput, Button, Alert, Dimensions } from 'react-native';
 import configData from "../config.json";
 
 const windowHeight = Dimensions.get('window').height;
@@ -29,22 +29,25 @@ const MyComponent = () => {
     };
   
     return (
+      <SafeAreaView style={styles.container_main}>
         <View style={styles.container}>
-        <View style={styles.header}>
-          <View style={styles.searchContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter your search query"
-              onChangeText={text => setSearchQuery(text)}
-              value={searchQuery}
-            />
-            <Button title="Search" onPress={handleSearch} />
+          <View style={styles.header}>
+            <View style={styles.searchContainer}>
+              <TextInput
+                autoFocus = {true}
+                style={styles.input}
+                placeholder="Enter your search query"
+                onChangeText={text => setSearchQuery(text)}
+                value={searchQuery}
+              />
+              <Button title="Search" onPress={handleSearch} />
+            </View>
+          </View>
+          <View style={styles.content}>
+            {/* Other content goes here */}
           </View>
         </View>
-        <View style={styles.content}>
-          {/* Other content goes here */}
-        </View>
-      </View>
+      </SafeAreaView>
     );
 };
 
@@ -81,7 +84,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         flex: 1, // take up remaining space
         marginRight: 10, // margin between input and button
-      }
+      },
+      container_main: {
+        flex: 1,
+        //height: windowHeight * 0.9,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor:  '#ADD8E6'
+      },
 });
 
 export default MyComponent;

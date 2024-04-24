@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { View, Text, StyleSheet , Button, Alert, SafeAreaView, Dimensions} from 'react-native';
 import MyButton from './components/MyButton';
 import configData from "./config.json";
 import MyComponent from './components/MyComponent';
+import HomeScreen from './components/HomeScreen';
+
+const Stack = createNativeStackNavigator();
 
 const App = () => {
+  // const handlePress = () => {
+  //   //Alert.alert('Button pressed!');
+  //   navigation.navigate('Search');
+  // };
+
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const handlePress = () => {
-    Alert.alert('Button pressed!');
-  };
 
   useEffect(() => {
     connection = configData.connection;
@@ -33,22 +39,59 @@ const App = () => {
   }, []);
 
   return (
-    <View style={style.container}>
-      {loading ? (
-        <Text>Loading...</Text>
-      ) : error ? (
-        <Text>Error: {error.message}</Text>
-      ) : (
-        <SafeAreaView style={style.container}>
-            <MyComponent />
-        </SafeAreaView>
+    // <View style={style.container}>
+    //   {loading ? (
+    //     <Text>Loading...</Text>
+    //   ) : error ? (
+    //     <Text>Error: {error.message}</Text>
+    //   ) : (
+    //     <SafeAreaView style={style.container}>
+    //         <MyComponent />
+    //     </SafeAreaView>
 
-      )}
-    </View>
+    //   )}
+    // </View>
+    <NavigationContainer>
+      <Stack.Navigator 
+        initialRouteName='Wishlist'
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: 'rgba(0, 75, 128, 50)', // Change this to the color you want
+          },
+          headerTintColor: 'rgb(255,255,255)', // Change the text color of the header
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+        >
+        <Stack.Screen
+          name = "Wishlist"
+          component = {HomeScreen}
+          // options = {{
+          //   onPress: handlePress(),
+          //   color: 'rgb(128,128,128)'
+          // }}
+          // onPress = {handlePress()}
+          // color = 'rgb(128,128,128)'
+          // initialParams={{
+          //   color: 'rgb(128,128,128)',
+          //   text: 'Search' }}
+          options={({ navigation }) => ({
+            title: 'Wishlist',
+            headerRight: () => <MyButton navigation={navigation} />,
+          })}
+          style = {styles.button}
+        />
+        <Stack.Screen
+          name = "Search"
+          component = {MyComponent}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     //height: windowHeight * 0.9,
@@ -56,7 +99,12 @@ const style = StyleSheet.create({
     alignItems: 'center',
     backgroundColor:  '#ADD8E6'
   },
-
+  button: {
+    //width: '50%',
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end'
+  }
 });
 
 export default App;
