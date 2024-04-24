@@ -64,6 +64,37 @@ app.get('/', (req, res) => {
   res.send('Hello from Node.js backend!');
 });
 
+/*
+app.post('/search', (req, res) => {
+  const { query } = req.body;
+  console.log('Received search query:', query);
+
+  // Here you can process the search query (e.g., query a database, perform a search operation)
+  // For demonstration purposes, let's simply send back a response with the received query
+  res.json({ message: `Received search query: ${query}` });
+});
+
+app.use((req, res, next) => {
+  const token = req.headers.authorization;
+  if (token !== '') {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+  next();
+});
+*/
+
+app.post('/search', (req, res) => {
+  const query = req.body.query;
+  console.log('Received search query:', query);
+
+  // Here you can process the search query (e.g., query a database, perform a search operation)
+  // For demonstration purposes, let's simply send back a response with the received query
+  let message_ = 'Received search query: ' + query;
+  res.json({ message: message_});
+});
+
+
+// Route for handling other requests that require authentication
 app.use((req, res, next) => {
   const token = req.headers.authorization;
   if (token !== '') {
