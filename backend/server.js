@@ -95,13 +95,13 @@ app.post('/search', (req, res) => {
 
 
 // Route for handling other requests that require authentication
-app.use((req, res, next) => {
-  const token = req.headers.authorization;
-  if (token !== '') {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-  next();
-});
+// app.use((req, res, next) => {
+//   const token = req.headers.authorization;
+//   if (token !== '') {
+//     return res.status(401).json({ message: 'Unauthorized' });
+//   }
+//   next();
+// });
 
 // Start the server
 app.listen(PORT, () => {
