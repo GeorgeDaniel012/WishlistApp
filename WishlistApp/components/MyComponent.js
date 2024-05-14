@@ -11,7 +11,10 @@ const MyComponent = () => {
 
     const handleSearch = () => {
       // Send the search query to the backend
-      fetch(configData.connection+"/igdbapi/"+encodeURIComponent(searchQuery), {
+
+      // FOR TESTING TMDB API
+      //fetch(configData.connection+"/igdbapi/"+encodeURIComponent(searchQuery), {
+      fetch(configData.connection+"/tmdbapi/"+encodeURIComponent(searchQuery), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

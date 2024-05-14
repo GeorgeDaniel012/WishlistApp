@@ -3,6 +3,7 @@ const { Sequelize } = require('sequelize');
 const bodyParser = require('body-parser');
 const wishlistRoutes = require('./routers/wishlistRoutes.js');
 const igdbRoutes = require('./api-calls/igdbApiRoutes.js');
+const tmdbRoutes = require('./api-calls/tmdbApiRoutes.js');
 
 const app = express();
 const fs = require('fs');
@@ -58,6 +59,7 @@ app.use(bodyParser.json());
 
 app.use('/wishlist', wishlistRoutes);
 app.use('/igdbapi', igdbRoutes);
+app.use('/tmdbapi', tmdbRoutes);
 
 // Define a route that responds with a message
 app.get('/', (req, res) => {
