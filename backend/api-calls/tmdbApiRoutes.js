@@ -10,19 +10,10 @@ const router = express.Router();
 try {
     const configData = fs.readFileSync('./config.json');
     const config = JSON.parse(configData);
-    IGDB_CLIENT_ID = config.IGDB_CLIENT_ID;
-    IGDB_ACCESS_TOKEN = config.IGDB_ACCESS_TOKEN;
+    TMDB_AUTHORIZATION = config.TMDB_AUTHORIZATION;
   } catch (err) {
       console.error('Error reading config file:', err);
   }
-
-// const options = {
-//   method: 'GET',
-//   headers: {
-//     accept: 'application/json',
-//     Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3OWY3ZmZjZTkzYTY5YzIwNTNhZDM4YjFjMjA5YWIxNyIsInN1YiI6IjY2MDJkNjNjNjA2MjBhMDE2MzJhOWYzMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.M3UYa2LV9D1UmawKQ1_aZZZKyQMUv93G0J-i-HGnHdo'
-//   }
-// };
 
 // fetch(url, options)
 //   .then(res => res.json())
@@ -38,7 +29,7 @@ async function fetchMovieShowInfoById(mediaId){
         method: 'GET',
         headers: {
             accept: 'application/json',
-            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3OWY3ZmZjZTkzYTY5YzIwNTNhZDM4YjFjMjA5YWIxNyIsInN1YiI6IjY2MDJkNjNjNjA2MjBhMDE2MzJhOWYzMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.M3UYa2LV9D1UmawKQ1_aZZZKyQMUv93G0J-i-HGnHdo'
+            Authorization: `Bearer ${TMDB_AUTHORIZATION}`
         }
     });
     console.log(response.data);
@@ -56,7 +47,7 @@ async function fetchMovieShowInfoByName(mediaName){
         method: 'GET',
         headers: {
             accept: 'application/json',
-            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3OWY3ZmZjZTkzYTY5YzIwNTNhZDM4YjFjMjA5YWIxNyIsInN1YiI6IjY2MDJkNjNjNjA2MjBhMDE2MzJhOWYzMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.M3UYa2LV9D1UmawKQ1_aZZZKyQMUv93G0J-i-HGnHdo'
+            Authorization: `Bearer ${TMDB_AUTHORIZATION}`
         }
     });
 
@@ -68,7 +59,7 @@ async function fetchMovieShowInfoByName(mediaName){
         method: 'GET',
         headers: {
             accept: 'application/json',
-            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3OWY3ZmZjZTkzYTY5YzIwNTNhZDM4YjFjMjA5YWIxNyIsInN1YiI6IjY2MDJkNjNjNjA2MjBhMDE2MzJhOWYzMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.M3UYa2LV9D1UmawKQ1_aZZZKyQMUv93G0J-i-HGnHdo'
+            Authorization: `Bearer ${TMDB_AUTHORIZATION}`
         }
     });
 
