@@ -13,24 +13,40 @@ const MyComponent = () => {
       // Send the search query to the backend
 
       // FOR TESTING TMDB API
-      //fetch(configData.connection+"/igdbapi/"+encodeURIComponent(searchQuery), {
-      fetch(configData.connection+"/tmdbapi/"+encodeURIComponent(searchQuery), {
+      fetch(configData.connection+"/igdbapi/"+encodeURIComponent(searchQuery), {
+      //fetch(configData.connection+"/tmdbapi/"+encodeURIComponent(searchQuery), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
         //body: JSON.stringify({ query: searchQuery }),
       })
-        .then(response => response.json())
-        .then(data => {
+        .then(responseGames => responseGames.json())
+        .then(dataGames => {
           // Handle backend response
-          console.log('Search results:', data);
-          setSearchResults(data);
+          //console.log('Search results games:', data_games);
+          fetch(configData.connection+"/tmdbapi/"+encodeURIComponent(searchQuery), {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            //body: JSON.stringify({ query: searchQuery }),
+          })
+          .then(responseMtv => responseMtv.json())
+          .then(dataMtv => {
+            allData = dataGames.concat(dataMtv);
+            setSearchResults(allData);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            Alert.alert('Error', 'Failed to fetch search results for movies and shows');
+          });
+          //setSearchResults(data);
           // You can update state or perform any other action based on the response
         })
         .catch(error => {
           console.error('Error:', error);
-          Alert.alert('Error', 'Failed to fetch search results');
+          Alert.alert('Error', 'Failed to fetch search results for games');
         });
     };
   

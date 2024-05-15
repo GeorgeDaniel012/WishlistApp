@@ -21,8 +21,10 @@ try {
 //   .catch(err => console.error('error:' + err));
 
 // It used the IMDB ID
-async function fetchMovieShowInfoById(mediaId){
-    const url = 'https://api.themoviedb.org/3/find/' + mediaId + '?external_source=imdb_id';
+async function fetchMovieShowInfoById(mediaId, mediaType){
+    //const url = 'https://api.themoviedb.org/3/find/' + mediaId + '?external_source=imdb_id';
+
+    const url = 'https://api.themoviedb.org/3/' + mediaType + '/' + mediaId;
 
     const response = await axios({
         url: url,
@@ -36,6 +38,7 @@ async function fetchMovieShowInfoById(mediaId){
 }
 
 //fetchMovieShowInfoById('tt15239678');
+//fetchMovieShowInfoById(253514, 'tv');
 
 //It gives another ID, the TMDB ID?
 async function fetchMovieShowInfoByName(mediaName){
@@ -64,16 +67,22 @@ async function fetchMovieShowInfoByName(mediaName){
     });
 
     const allResults = response.data.results.concat(response2.data.results);
+    const filteredArray = allResults.filter(obj => obj.media_type !== 'person');
 
-    console.log(allResults);
+    console.log(filteredArray);
 
-    const arrayOfResults = allResults.map(item => ({
+    const arrayOfResults = filteredArray.map(item => ({
         //name: item.original_name,
-        name: typeof item.original_name == "undefined" ? item.original_title : item.original_name,
+        name: typeof item.original_name === "undefined" ? item.original_title : item.original_name,
         id: item.id,
-        imageUrl: 'http://image.tmdb.org/t/p/original/' + item.poster_path
+        //imageUrl: 'http://image.tmdb.org/t/p/original/' + item.poster_path
+        imageUrl: typeof item.poster_path === "undefined" || item.poster_path === null
+            ? 'https://i.imgur.com/VCMGiHY.png'
+            : 'http://image.tmdb.org/t/p/original/' + item.poster_path,
+        typeOfMedia: item.media_type
     }));
 
+    //console.log('aaaaa');
     //console.log(arrayOfResults);
     return arrayOfResults;
 }

@@ -54,7 +54,8 @@ async function fetchGameInfo() {
     const transformedArray = response.data.map(item => ({
         name: item.name,
         id: item.id,
-        imageUrl: null
+        imageUrl: null,
+        typeOfMedia: 'game'
     }));
 
     const gameIds = transformedArray.map(item => item.id);
@@ -64,8 +65,12 @@ async function fetchGameInfo() {
     for(let ob of transformedArray){
         if(imageUrlsMap.hasOwnProperty(ob.id)){
             ob.imageUrl = imageUrlsMap[ob.id];
+        } else {
+          // console.log(ob.imageUrl)
+          ob.imageUrl = 'https://i.imgur.com/VCMGiHY.png';
         }
     }
+    
     return transformedArray;
     } catch (error) {
       console.error('Error fetching game from IGDB API:', error);

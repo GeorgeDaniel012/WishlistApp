@@ -12,7 +12,7 @@ const Result = (props) => {
                 },
                 body: JSON.stringify({
                     userId: 1,
-                    typeOfMedia: 'game',
+                    typeOfMedia: props.object.typeOfMedia,
                     mediaId: props.object.id
                 }),
             });
@@ -33,6 +33,7 @@ const Result = (props) => {
                 <View style={styles.textContainer}>
                     <Text>Name: {props.object.name}</Text>
                     <Text>Id: {props.object.id}</Text>
+                    <Text>Media Type: {props.object.typeOfMedia}</Text>
                 </View>
                 <View style={styles.imageContainer}>
                     <Image
