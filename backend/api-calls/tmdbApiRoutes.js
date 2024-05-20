@@ -20,7 +20,7 @@ try {
 //   .then(json => console.log(json))
 //   .catch(err => console.error('error:' + err));
 
-// It used the IMDB ID
+// It used to use the IMDB ID
 async function fetchMovieShowInfoById(mediaId, mediaType){
     //const url = 'https://api.themoviedb.org/3/find/' + mediaId + '?external_source=imdb_id';
 

@@ -1,69 +1,37 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, View, Text, StyleSheet, TextInput, Button, Alert, Dimensions } from 'react-native';
 import configData from "../config.json";
 import SearchResults from "./SearchResults";
 
 const windowHeight = Dimensions.get('window').height;
 
-const MyComponent = () => {
-    const [searchQuery, setSearchQuery] = useState('');
+const Profile = () => {
+    const [userId, setUserId] = useState(1);
     const [searchResults, setSearchResults] = useState([]);
 
-    const handleSearch = () => {
+    useEffect(() => {
       // Send the search query to the backend
 
       // FOR TESTING TMDB API
-      fetch(configData.connection+"/igdbapi/"+encodeURIComponent(searchQuery), {
-      //fetch(configData.connection+"/tmdbapi/"+encodeURIComponent(searchQuery), {
+      console.log(configData.connection+"/wishlist/"+userId);
+      fetch(configData.connection+"/wishlist/"+userId, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-        //body: JSON.stringify({ query: searchQuery }),
       })
-        .then(responseGames => responseGames.json())
-        .then(dataGames => {
-          // Handle backend response
-          //console.log('Search results games:', data_games);
-          fetch(configData.connection+"/tmdbapi/"+encodeURIComponent(searchQuery), {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            //body: JSON.stringify({ query: searchQuery }),
-          })
-          .then(responseMtv => responseMtv.json())
-          .then(dataMtv => {
-            allData = dataGames.concat(dataMtv);
-            setSearchResults(allData);
-          })
-          .catch(error => {
-            console.error('Error:', error);
-            Alert.alert('Error', 'Failed to fetch search results for movies and shows');
-          });
-          //setSearchResults(data);
-          // You can update state or perform any other action based on the response
-        })
+        .then(responseItems => responseItems.json())
+        .then(data => setSearchResults(data))
         .catch(error => {
-          console.error('Error:', error);
-          Alert.alert('Error', 'Failed to fetch search results for games');
+            console.error('Error:', error);
+            Alert.alert('Error', 'Failed to fetch wishlist items');
         });
-    };
+    }, []);
   
     return (
       <SafeAreaView style={styles.container_main}>
         <View style={styles.container}>
           <View style={styles.header}>
-            <View style={styles.searchContainer}>
-              <TextInput
-                autoFocus = {true}
-                style={styles.input}
-                placeholder="Enter your search query"
-                onChangeText={text => setSearchQuery(text)}
-                value={searchQuery}
-              />
-              <Button title="Search" onPress={() => {searchQuery != "" ? handleSearch() : null}} />
-            </View>
           </View>
           <View style={styles.results}>
             {searchResults.length != 0
@@ -140,4 +108,4 @@ const styles = StyleSheet.create({
       }
 });
 
-export default MyComponent;
+export default Profile;
