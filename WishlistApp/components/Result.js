@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import configData from '../config.json';
+import { useNavigation } from '@react-navigation/native';
 
 const Result = (props) => {
     const addToWishlist = async () => {
@@ -27,8 +28,16 @@ const Result = (props) => {
         }
     };
 
+    const navigation = useNavigation();
+
+    const viewMedia = () => {
+        //console.log(props.object.id);
+        navigation.navigate('MediaPage', {mediaId: props.object.id, typeOfMedia: props.object.typeOfMedia});
+    };
+
     return (
-        <TouchableOpacity onPress={addToWishlist}>
+        //<TouchableOpacity onPress={addToWishlist}>
+        <TouchableOpacity onPress={viewMedia}>
             <View style={styles.result}>
                 <View style={styles.textContainer}>
                     <Text>Name: {props.object.name}</Text>

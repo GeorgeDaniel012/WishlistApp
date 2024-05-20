@@ -35,6 +35,8 @@ async function fetchMovieShowInfoById(mediaId, mediaType){
         }
     });
     console.log(response.data);
+
+    return response.data;
 }
 
 //fetchMovieShowInfoById('tt15239678');
@@ -99,5 +101,17 @@ router.get('/:searchString', async (req, res) => {
         res.status(500).json({ message: 'Error contacting TMDB api' });
     }
 });
+
+router.get('/id/:mediaType/:mediaId', async (req, res) => {
+    try {
+        const id = req.params.mediaId;
+        const mediaType = req.params.mediaType;
+        const media = await fetchMovieShowInfoById(id, mediaType);
+        res.json(media);
+    } catch (error) {
+        console.error('Error contacting TMDB api:', error);
+        res.status(500).json({ message: 'Error contacting TMDB api' });
+    }
+  });
 
 module.exports = router;
