@@ -7,6 +7,7 @@ import configData from "./config.json";
 import SearchPage from './components/SearchPage';
 import HomeScreen from './components/HomeScreen';
 import Profile from './components/Profile';
+import MediaInfo from './components/MediaInfo';
 
 const Stack = createNativeStackNavigator();
 
@@ -92,6 +93,10 @@ const App = () => {
         <Stack.Screen
           name = "Profile"
           component = {Profile}
+        />
+        <Stack.Screen
+          name = "MediaPage"
+          component = {MediaInfo}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -168,7 +168,7 @@ async function fetchGameInfoById(gameId) {
     response.data[0].genres = await fetchGenreNames(response.data[0].genres);
     response.data[0].platforms = await fetchPlatformNames(response.data[0].platforms);
     response.data[0].screenshots = response.data[0].screenshots.map(screenshot => "https:" + screenshot.url.replace("t_thumb", "t_cover_big"));
-    return response.data;
+    return response.data[0];
   } catch (error) {
     console.error('Error fetching game from IGDB API:', error);
   }
