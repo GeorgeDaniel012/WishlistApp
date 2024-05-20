@@ -47,11 +47,40 @@ const Result = (props) => {
     );
 }
 
+// const styles = StyleSheet.create({
+//     result: {
+//         flexDirection: 'row',
+//         alignItems: 'center',
+//         justifyContent: 'space-between',
+//         borderStyle: 'solid',
+//         borderRadius: 15,
+//         borderWidth: 3,
+//         borderColor: 'black',
+//         backgroundColor: 'white',
+//         marginBottom: 5,
+//         marginTop: 5,
+//         padding: 5
+//     },
+//     textContainer: {
+//         flex: 1
+//     },
+//     imageContainer: {
+//         marginLeft: 10
+//     },
+//     image: {
+//         width: 80, // Adjust image width
+//         height: 80, // Adjust image height
+//         borderRadius: 40 // Makes it circular
+//     }
+// });
+
 const styles = StyleSheet.create({
     result: {
-        flexDirection: 'row',
+        width: 150, // Set a fixed width for consistency
+        height: 250, // Set a fixed height for consistency
+        flexDirection: 'column', // Set layout direction to column
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         borderStyle: 'solid',
         borderRadius: 15,
         borderWidth: 3,
@@ -59,13 +88,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         marginBottom: 5,
         marginTop: 5,
-        padding: 5
+        padding: 10 // Adjust padding for better spacing
     },
     textContainer: {
-        flex: 1
-    },
-    imageContainer: {
-        marginLeft: 10
+        marginTop: 10, // Add some margin at the top to separate text from image
+        alignItems: 'center', // Center the text horizontally
     },
     image: {
         width: 80, // Adjust image width

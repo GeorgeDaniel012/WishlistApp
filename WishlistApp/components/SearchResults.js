@@ -10,8 +10,13 @@ const SearchResults = (props) => {
     }
 
     return(
-        <ScrollView style = {styles.scrollView}>
-            <Text>{props.data.length}</Text>
+        //<ScrollView style = {styles.scrollView}>
+        <ScrollView 
+            style={styles.scrollView} 
+            horizontal={true} // Enable horizontal scrolling
+            showsHorizontalScrollIndicator={false} // Hide horizontal scroll indicator if desired
+        >
+            {/* <Text>{props.data.length}</Text> */}
             {/* <FlatList 
                 style={styles.scrollView}
                 data={props.data} // Pass the array as data prop
@@ -36,8 +41,8 @@ const styles = StyleSheet.create({
     scrollView: {
         backgroundColor: 'transparent',
         flex: 1,
-        width: 'auto',
-        height: '100%',
+        width: '100%',
+        height: 'auto',
         flexGrow: 1,
         
     },

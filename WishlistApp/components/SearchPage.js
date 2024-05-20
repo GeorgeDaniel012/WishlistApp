@@ -7,46 +7,75 @@ const windowHeight = Dimensions.get('window').height;
 
 const SearchPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
+    const [searchResultsGames, setSearchResultsGames] = useState([]);
+    const [searchResultsMTV, setSearchResultsMTV] = useState([]);
 
     const handleSearch = () => {
       // Send the search query to the backend
 
       // FOR TESTING TMDB API
+      // fetch(configData.connection+"/igdbapi/"+encodeURIComponent(searchQuery), {
+      // //fetch(configData.connection+"/tmdbapi/"+encodeURIComponent(searchQuery), {
+      //   method: 'GET',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   //body: JSON.stringify({ query: searchQuery }),
+      // })
+      //   .then(responseGames => responseGames.json())
+      //   .then(dataGames => {
+      //     // Handle backend response
+      //     //console.log('Search results games:', data_games);
+      //     fetch(configData.connection+"/tmdbapi/"+encodeURIComponent(searchQuery), {
+      //       method: 'GET',
+      //       headers: {
+      //         'Content-Type': 'application/json',
+      //       },
+      //       //body: JSON.stringify({ query: searchQuery }),
+      //     })
+      //     .then(responseMtv => responseMtv.json())
+      //     .then(dataMtv => {
+      //       allData = dataGames.concat(dataMtv);
+      //       setSearchResults(allData);
+      //     })
+      //     .catch(error => {
+      //       console.error('Error:', error);
+      //       Alert.alert('Error', 'Failed to fetch search results for movies and shows');
+      //     });
+      //     //setSearchResults(data);
+      //     // You can update state or perform any other action based on the response
+      //   })
+      //   .catch(error => {
+      //     console.error('Error:', error);
+      //     Alert.alert('Error', 'Failed to fetch search results for games');
+      //   });
+
+      //here igdb
       fetch(configData.connection+"/igdbapi/"+encodeURIComponent(searchQuery), {
-      //fetch(configData.connection+"/tmdbapi/"+encodeURIComponent(searchQuery), {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+      })
+        .then(responseGames => responseGames.json())
+        .then(data => setSearchResultsGames(data))
+        .catch(error => {
+          console.error('Error:', error);
+          Alert.alert('Error', 'Failed to fetch search results for games');
+        });
+      
+      //here tmdb
+      fetch(configData.connection+"/tmdbapi/"+encodeURIComponent(searchQuery), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-        //body: JSON.stringify({ query: searchQuery }),
       })
-        .then(responseGames => responseGames.json())
-        .then(dataGames => {
-          // Handle backend response
-          //console.log('Search results games:', data_games);
-          fetch(configData.connection+"/tmdbapi/"+encodeURIComponent(searchQuery), {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            //body: JSON.stringify({ query: searchQuery }),
-          })
-          .then(responseMtv => responseMtv.json())
-          .then(dataMtv => {
-            allData = dataGames.concat(dataMtv);
-            setSearchResults(allData);
-          })
-          .catch(error => {
-            console.error('Error:', error);
-            Alert.alert('Error', 'Failed to fetch search results for movies and shows');
-          });
-          //setSearchResults(data);
-          // You can update state or perform any other action based on the response
-        })
+        .then(responseMTV => responseMTV.json())
+        .then(data => setSearchResultsMTV(data))
         .catch(error => {
           console.error('Error:', error);
-          Alert.alert('Error', 'Failed to fetch search results for games');
+          Alert.alert('Error', 'Failed to fetch search results for movies and TV shows');
         });
     };
   
@@ -66,10 +95,20 @@ const SearchPage = () => {
             </View>
           </View>
           <View style={styles.results}>
-            {searchResults.length != 0
-                ? <SearchResults data={searchResults}></SearchResults>
-                : null
-              }
+            <>
+              {searchResultsMTV.length != 0 ? (
+                <>
+                  <Text>Movie / TV Show results: </Text>
+                  <SearchResults data={searchResultsMTV}/>
+                </>
+              ) : null}
+              {searchResultsGames.length != 0 ? (
+                <>
+                  <Text>Game results: </Text>
+                  <SearchResults data={searchResultsGames}/>
+                </>
+              ) : null}
+            </>
           </View>
           <View style={styles.content}>
             {/* Other content goes here */}
