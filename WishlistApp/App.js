@@ -4,8 +4,9 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { View, Text, StyleSheet , Button, Alert, SafeAreaView, Dimensions} from 'react-native';
 import MyButton from './components/MyButton';
 import configData from "./config.json";
-import MyComponent from './components/MyComponent';
+import SearchPage from './components/SearchPage';
 import HomeScreen from './components/HomeScreen';
+import Profile from './components/Profile';
 
 const Stack = createNativeStackNavigator();
 
@@ -62,6 +63,7 @@ const App = () => {
           headerTitleStyle: {
             fontWeight: 'bold',
           },
+          //headerShown: false
         }}
         >
         <Stack.Screen
@@ -77,14 +79,19 @@ const App = () => {
           //   color: 'rgb(128,128,128)',
           //   text: 'Search' }}
           options={({ navigation }) => ({
-            title: 'Wishlist',
-            headerRight: () => <MyButton navigation={navigation} />,
+            title: '',
+            headerLeft: () => <MyButton navigation={navigation} page='Profile'/>,
+            headerRight: () => <MyButton navigation={navigation} page='Search'/>,
           })}
           style = {styles.button}
         />
         <Stack.Screen
           name = "Search"
-          component = {MyComponent}
+          component = {SearchPage}
+        />
+        <Stack.Screen
+          name = "Profile"
+          component = {Profile}
         />
       </Stack.Navigator>
     </NavigationContainer>

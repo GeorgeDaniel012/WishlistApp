@@ -4,6 +4,7 @@ const axios = require('axios');
 const express = require('express');
 const router = express.Router();
 
+
 try {
     const configData = fs.readFileSync('./config.json');
     const config = JSON.parse(configData);
