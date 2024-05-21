@@ -99,6 +99,9 @@ async function fetchGameInfo() {
   
       // Process the response data
       //console.log(response.data);
+      if(response.data.length == 0){
+        return;
+      }
       let id = response.data[0].image_id;
       let url = response.data[0].url;
       let urlModified = "https:" + url.replace("t_thumb", "t_1080p");
@@ -165,9 +168,17 @@ async function fetchGameInfoById(gameId) {
     imageUrl = await fetchGameImage(gameId);
     // Process the response data
     response.data[0].imageUrl = imageUrl;
-    response.data[0].genres = await fetchGenreNames(response.data[0].genres);
-    response.data[0].platforms = await fetchPlatformNames(response.data[0].platforms);
-    response.data[0].screenshots = response.data[0].screenshots.map(screenshot => "https:" + screenshot.url.replace("t_thumb", "t_cover_big"));
+    if(typeof response.data[0].genres !== 'undefined' && response.data[0].genres.length != 0){
+      response.data[0].genres = await fetchGenreNames(response.data[0].genres);
+    }
+    if(typeof response.data[0].platforms !== 'undefined' && response.data[0].platforms.length != 0){
+      response.data[0].platforms = await fetchPlatformNames(response.data[0].platforms);
+    }
+    //console.log(imageUrl);
+    if(typeof response.data[0].screenshots !== 'undefined' && response.data[0].screenshots.length != 0){
+      response.data[0].screenshots = response.data[0].screenshots.map(screenshot => "https:" + screenshot.url.replace("t_thumb", "t_cover_big"));
+    }
+    
     return response.data[0];
   } catch (error) {
     console.error('Error fetching game from IGDB API:', error);

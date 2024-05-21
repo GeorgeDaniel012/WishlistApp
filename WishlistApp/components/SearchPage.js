@@ -3,7 +3,7 @@ import { SafeAreaView, View, Text, StyleSheet, TextInput, Button, Alert, Dimensi
 import configData from "../config.json";
 import SearchResults from "./SearchResults";
 
-const windowHeight = Dimensions.get('window').height;
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 const SearchPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
