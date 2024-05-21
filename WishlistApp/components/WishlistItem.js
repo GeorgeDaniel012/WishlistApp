@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, FlatList, Button } from 'react-native';
 import configData from '../config.json';
+import { useNavigation } from '@react-navigation/native';
 
 const WishlistItem = (props) => {
     const [modalVisible, setModalVisible] = useState(false);

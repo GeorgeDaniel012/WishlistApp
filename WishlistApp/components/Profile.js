@@ -13,7 +13,6 @@ const Profile = () => {
       // Send the search query to the backend
 
       // FOR TESTING TMDB API
-      console.log(configData.connection+"/wishlist/"+userId);
       fetch(configData.connection+"/wishlist/"+userId, {
         method: 'GET',
         headers: {
