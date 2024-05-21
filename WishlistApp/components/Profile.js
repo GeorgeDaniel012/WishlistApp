@@ -9,7 +9,7 @@ const Profile = () => {
     const [userId, setUserId] = useState(1);
     const [searchResults, setSearchResults] = useState([]);
 
-    useEffect(() => {
+    const loadWishlist = () => {
       // Send the search query to the backend
 
       // FOR TESTING TMDB API
@@ -25,7 +25,9 @@ const Profile = () => {
             console.error('Error:', error);
             Alert.alert('Error', 'Failed to fetch wishlist items');
         });
-    }, []);
+    };
+
+    useEffect(() => loadWishlist(), []);
   
     return (
       <SafeAreaView style={styles.container_main}>
@@ -34,7 +36,7 @@ const Profile = () => {
           </View>
           <View style={styles.results}>
             {searchResults.length != 0
-                ? <WishlistResults data={searchResults}></WishlistResults>
+                ? <WishlistResults data={searchResults} loadWishlist={loadWishlist}></WishlistResults>
                 : null
               }
           </View>

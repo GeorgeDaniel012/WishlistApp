@@ -34,7 +34,7 @@ async function fetchMovieShowInfoById(mediaId, mediaType){
             Authorization: `Bearer ${TMDB_AUTHORIZATION}`
         }
     });
-    console.log(response.data);
+    //console.log(response.data);
 
     return response.data;
 }
@@ -71,7 +71,7 @@ async function fetchMovieShowInfoByName(mediaName){
     const allResults = response.data.results.concat(response2.data.results);
     const filteredArray = allResults.filter(obj => obj.media_type !== 'person');
 
-    console.log(filteredArray);
+    //console.log(filteredArray);
 
     const arrayOfResults = filteredArray.map(item => ({
         //name: item.original_name,

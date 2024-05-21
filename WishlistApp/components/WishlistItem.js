@@ -1,57 +1,80 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, FlatList, Button } from 'react-native';
 import configData from '../config.json';
 import { useNavigation } from '@react-navigation/native';
 
 const WishlistItem = (props) => {
-    // const addToWishlist = async () => {
-    //     try {
-    //         const response = await fetch(configData.connection + '/wishlist/add', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify({
-    //                 userId: 1,
-    //                 typeOfMedia: props.object.typeOfMedia,
-    //                 mediaId: props.object.id
-    //             }),
-    //         });
-    //         if (response.ok) {
-    //             console.log('Item added to wishlist successfully');
-    //             // You can do something after the item is added, like showing a message
-    //         } else {
-    //             console.error('Error adding item to wishlist');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error adding item to wishlist:', error);
-    //     }
-    // };
-    const navigation = useNavigation();
+    const [modalVisible, setModalVisible] = useState(false);
+    const [currentStatus, setCurrentStatus] = useState(props.object.status);
 
-    const viewMedia = () => {
-        navigation.navigate('MediaPage', { mediaId: props.object.id, typeOfMedia: props.object.typeOfMedia });
+    const statuses = ["planning", "watching/playing", "dropped", "completed"];
+
+    const changeStatus = (newStatus) => {
+        // Function to change the status of the item
+        fetch(configData.connection + "/wishlist/", {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: props.object.wishlistId,
+                status: newStatus
+            }),
+        })
+
+        console.log(`Status changed to: ${newStatus}`);
+        setCurrentStatus(newStatus);
+        //props.loadWishlist();
+        // You can add more logic here to handle the status change, e.g., API call
+        setModalVisible(false);
     };
 
     return (
-        <TouchableOpacity onPress={viewMedia}>
-            <View style={styles.result}>
-                <View style={styles.textContainer}>
-                    <Text>Name: {props.object.name}</Text>
-                    <Text>Id: {props.object.id}</Text>
-                    <Text>Media Type: {props.object.typeOfMedia}</Text>
-                </View>
-                <View style={styles.imageContainer}>
-                    <Image
-                        source={{ uri: props.object.imageUrl }} // Use online URL
-                        style={styles.image}
-                        resizeMode="cover"
-                    />
-                </View>
+        <View style={styles.result}>
+            <View style={styles.textContainer}>
+                <Text>Name: {props.object.name}</Text>
+                <Text>Id: {props.object.id}</Text>
+                <Text>Media Type: {props.object.typeOfMedia}</Text>
+                <Text>Status: {currentStatus}</Text>
+                {/* <Text>Wishlist id: {props.object.wishlistId} </Text> */}
             </View>
-        </TouchableOpacity>
+            <View style={styles.imageContainer}>
+                <Image
+                    source={{ uri: props.object.imageUrl }} // Use online URL
+                    style={styles.image}
+                    resizeMode="cover"
+                />
+            </View>
+            <TouchableOpacity onPress={() => setModalVisible(true)}>
+                <Text style={styles.optionsButton}>⋮</Text>
+            </TouchableOpacity>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <FlatList
+                            data={statuses}
+                            keyExtractor={(item) => item}
+                            renderItem={({ item }) => (
+                                <TouchableOpacity onPress={() => changeStatus(item)}>
+                                    <Text style={styles.modalItem}>{item}</Text>
+                                </TouchableOpacity>
+                            )}
+                        />
+                        <Button title="Close" onPress={() => setModalVisible(false)} />
+                    </View>
+                </View>
+            </Modal>
+        </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     result: {
@@ -77,6 +100,29 @@ const styles = StyleSheet.create({
         width: 80, // Adjust image width
         height: 80, // Adjust image height
         borderRadius: 40 // Makes it circular
+    },
+    optionsButton: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        paddingHorizontal: 10
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        width: 300,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 20,
+        alignItems: 'center',
+    },
+    modalItem: {
+        padding: 10,
+        fontSize: 18,
+        textAlign: 'center',
     }
 });
 
