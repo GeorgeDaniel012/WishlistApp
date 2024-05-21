@@ -100,7 +100,7 @@ const MediaInfo = (props) => {
                     style={{ width: 200, height: 200 }} // Define width and height
                     resizeMode="cover"
                 />
-                <Text>{mediaInfo.name}</Text>
+                <Text>{mediaInfo.title}</Text>
                 <Text>{mediaInfo.overview}</Text>
                 <Button onPress={addToWishlist} title="Add to Wishlist"></Button>
             </>
