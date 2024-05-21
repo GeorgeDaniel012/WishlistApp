@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Wishlist = require('../models/wishlist');
 
-
+const {fetchGamesInfoByIds} = require("../api-calls/igdbApiRoutes");
+const {fetchMovieShowInfoById} = require("../api-calls/tmdbApiRoutes");
 
 // Route to add an item to a user's wishlist
 router.post('/add', async (req, res) => {
@@ -22,7 +23,10 @@ router.get('/:userId', async (req, res) => {
   try {
     const userId = parseInt(req.params.userId);
     const wishlistItems = await Wishlist.findAll({ where: { userId } });
-    res.json(wishlistItems);
+    let newArr = wishlistItems.map(item => item.dataValues);
+    const wishlistItemsParsed = await transformJsonToJson(newArr); // Assuming Sequelize returns instances
+    
+    res.json(wishlistItemsParsed);
   } catch (error) {
     console.error('Error getting wishlist items:', error);
     res.status(500).json({ message: 'Error getting wishlist items' });
@@ -41,4 +45,47 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+
+//json to profile json (wishlist entries)
+/*{
+  "id"
+  "userId"
+  "typeOfMedia"
+  "mediaId"
+  "createdAt"
+  "updatedAt"
+} =>
+{
+  name
+  id
+  typeOfMedia
+  imageUrl
+}
+*/
+async function transformJsonToJson(mediaList){
+    let newList=[];
+    const gameMediaIds = mediaList.filter(media => media.typeOfMedia === "game").map(media => media.mediaId);
+    let gameMediaIdsMap={};
+    for (let i=0; i<gameMediaIds.length; i++){
+        gameMediaIdsMap[gameMediaIds[i]]=i;
+    }
+    
+    let resultGames = await fetchGamesInfoByIds(gameMediaIds);
+    resultGames.forEach(obj => {
+        obj.sortId = gameMediaIdsMap[obj.id];
+    });
+    resultGames.sort((a, b) => a.sortId - b.sortId);
+
+    const movieOrTvPromises = mediaList
+        .filter(media => media.typeOfMedia === 'movie' || media.typeOfMedia === 'tv')
+        .map(async (media) => ({
+            ...(await fetchMovieShowInfoById(media.mediaId, media.typeOfMedia)),
+            typeOfMedia: media.typeOfMedia
+        }));
+    
+    let movieOrTv = await Promise.all(movieOrTvPromises);    
+    
+    movieOrTv = movieOrTv.map(obj => ({name: (typeof(obj.title)==='undefined' ? obj.name : obj.title), id: obj.id,  typeOfMedia: obj.typeOfMedia, imageUrl: 'http://image.tmdb.org/t/p/original'+obj.poster_path}))
+    return [...resultGames,...movieOrTv];
+}
 module.exports = router;
