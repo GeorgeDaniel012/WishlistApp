@@ -37,6 +37,10 @@ const Wishlist = sequelize.define('Wishlist', {
   mediaId: {
     type: DataTypes.INTEGER,
     allowNull: false
+  },
+  status: {
+    type: DataTypes.STRING,
+    allowNull: false
   }
 }, {
   timestamps: true,
