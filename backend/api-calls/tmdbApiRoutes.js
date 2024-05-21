@@ -2,7 +2,7 @@ const fs = require('fs');
 const axios = require('axios');
 
 const express = require('express');
-const router = express.Router();
+const tmdbRoutes = express.Router();
 // tmdb exclusive
 //const fetch = require('node-fetch');
 
@@ -91,7 +91,7 @@ async function fetchMovieShowInfoByName(mediaName){
 
 //fetchMovieShowInfoByName('house');
 
-router.get('/:searchString', async (req, res) => {
+tmdbRoutes.get('/:searchString', async (req, res) => {
     try {
         const name = req.params.searchString;
         const moviesAndShows = await fetchMovieShowInfoByName(name);
@@ -102,7 +102,7 @@ router.get('/:searchString', async (req, res) => {
     }
 });
 
-router.get('/id/:mediaType/:mediaId', async (req, res) => {
+tmdbRoutes.get('/id/:mediaType/:mediaId', async (req, res) => {
     try {
         const id = req.params.mediaId;
         const mediaType = req.params.mediaType;
@@ -114,4 +114,4 @@ router.get('/id/:mediaType/:mediaId', async (req, res) => {
     }
   });
 
-module.exports = router;
+module.exports = {tmdbRoutes, fetchMovieShowInfoById};

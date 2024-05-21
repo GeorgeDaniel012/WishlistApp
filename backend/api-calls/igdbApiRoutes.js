@@ -2,44 +2,44 @@ const fs = require('fs');
 const axios = require('axios');
 
 const express = require('express');
-const router = express.Router();
+const igdbRoutes = express.Router();
 
 
 try {
-    const configData = fs.readFileSync('./config.json');
-    const config = JSON.parse(configData);
-    IGDB_CLIENT_ID = config.IGDB_CLIENT_ID;
-    IGDB_ACCESS_TOKEN = config.IGDB_ACCESS_TOKEN;
-  } catch (err) {
-      console.error('Error reading config file:', err);
-  }
+  const configData = fs.readFileSync('./config.json');
+  const config = JSON.parse(configData);
+  IGDB_CLIENT_ID = config.IGDB_CLIENT_ID;
+  IGDB_ACCESS_TOKEN = config.IGDB_ACCESS_TOKEN;
+} catch (err) {
+    console.error('Error reading config file:', err);
+}
 
 // Function to fetch data from IGDB API
 async function fetchGameInfo() {
-    try {
-      // Make a POST request to the IGDB API
-      const response = await axios({
-        url: 'https://api.igdb.com/v4/games',
-        method: 'POST',
-        headers: {
-          'Client-ID': IGDB_CLIENT_ID,
-          'Authorization': `Bearer ${IGDB_ACCESS_TOKEN}`,
-          'Accept': 'application/json'
-        },
-        data: 'fields name,release_dates,platforms; limit 10;'
-      });
-  
-      // Process the response data
-      console.log(response.data);
-    } catch (error) {
-      console.error('Error fetching data from IGDB API:', error);
-    }
+  try {
+    // Make a POST request to the IGDB API
+    const response = await axios({
+      url: 'https://api.igdb.com/v4/games',
+      method: 'POST',
+      headers: {
+        'Client-ID': IGDB_CLIENT_ID,
+        'Authorization': `Bearer ${IGDB_ACCESS_TOKEN}`,
+        'Accept': 'application/json'
+      },
+      data: 'fields name,release_dates,platforms; limit 10;'
+    });
+
+    // Process the response data
+    console.log(response.data);
+  } catch (error) {
+    console.error('Error fetching data from IGDB API:', error);
   }
+}
   
   
   
   // Function to fetch a game by ID from IGDB API
-  async function fetchGameInfoByName(gameName) {
+  async function fetchGamesInfoByName(gameName) {
     try {
       // Make a POST request to the IGDB API
       const response = await axios({
@@ -50,7 +50,7 @@ async function fetchGameInfo() {
           'Authorization': `Bearer ${IGDB_ACCESS_TOKEN}`,
           'Accept': 'application/json'
         },
-        data: `search "${gameName}"; fields *; limit 50;"`//`fields *; where name = ${gameName};`
+        data: `search "${gameName}"; fields name, id; limit 50;"`//`fields *; where name = ${gameName};`
       });
     const transformedArray = response.data.map(item => ({
         name: item.name,
@@ -254,6 +254,49 @@ async function fetchGameScreenshots(gameId) {
 
 }
 
+async function fetchGamesInfoByIds(listOfIds) {
+  //console.log('PLEASE HELP ME\n\n', JSON.stringify(listOfIds).replace("[", "(").replace("]", ")"));
+  try {
+    
+
+    // Make a POST request to the IGDB API
+    const response = await axios({
+      url: `https://api.igdb.com/v4/games/`,
+      method: 'POST',
+      headers: {
+        'Client-ID': IGDB_CLIENT_ID,
+        'Authorization': `Bearer ${IGDB_ACCESS_TOKEN}`,
+        'Accept': 'application/json'
+      },
+      data: `fields id, name; where id = ${JSON.stringify(listOfIds).replace("[", "(").replace("]", ")")};"`//`fields *; where name = ${gameName};`
+    });
+  const transformedArray = response.data.map(item => ({
+      name: item.name,
+      id: item.id,
+      imageUrl: null,
+      typeOfMedia: 'game'
+  }));
+
+  const gameIds = transformedArray.map(item => item.id);
+  console.log("size: ", gameIds.length);
+  
+  let imageUrlsMap = await fetchGameImages(gameIds);
+  for(let ob of transformedArray){
+      if(imageUrlsMap.hasOwnProperty(ob.id)){
+          ob.imageUrl = imageUrlsMap[ob.id];
+      } else {
+        // console.log(ob.imageUrl)
+        ob.imageUrl = 'https://i.imgur.com/VCMGiHY.png';
+      }
+  }
+  
+  return transformedArray;
+  } catch (error) {
+    console.error('Error fetching game from IGDB API:', error);
+  }
+}
+
+
 //Testing
 /*(async ()=>{
     let test=await fetchGameInfoById(123);
@@ -266,11 +309,10 @@ async function fetchGameScreenshots(gameId) {
 
 //fetchGameImages([36308, 108485, 123]);
 
-
-router.get('/:searchString', async (req, res) => {
+igdbRoutes.get('/:searchString', async (req, res) => {
     try {
         const name = req.params.searchString;
-        const games = await fetchGameInfoByName(name);
+        const games = await fetchGamesInfoByName(name);
         res.json(games);
     } catch (error) {
         console.error('Error contacting IGDB api:', error);
@@ -278,7 +320,7 @@ router.get('/:searchString', async (req, res) => {
     }
 });
 
-router.get('/id/:gameId', async (req, res) => {
+igdbRoutes.get('/id/:gameId', async (req, res) => {
   try {
       const id = req.params.gameId;
       const game = await fetchGameInfoById(id);
@@ -289,4 +331,11 @@ router.get('/id/:gameId', async (req, res) => {
   }
 });
 
-module.exports = router;
+//igdbRoutes.get('/wishlistEntry/:')
+
+
+
+
+
+//const igdbRoutes = igdbRoutes;
+module.exports = {igdbRoutes, fetchGamesInfoByIds};
