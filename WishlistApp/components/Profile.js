@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, View, Text, StyleSheet, TextInput, Button, Alert, Dimensions } from 'react-native';
 import configData from "../config.json";
-import SearchResults from "./SearchResults";
+import WishlistResults from "./WishlistResults";
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -35,7 +35,7 @@ const Profile = () => {
           </View>
           <View style={styles.results}>
             {searchResults.length != 0
-                ? <SearchResults data={searchResults}></SearchResults>
+                ? <WishlistResults data={searchResults}></WishlistResults>
                 : null
               }
           </View>
@@ -58,14 +58,14 @@ const styles = StyleSheet.create({
         //paddingTop: windowHeight * 0.06, // Add padding to create space at the top
         //backgroundColor: 'pink'
       },
-      header: {
-        height: 50,
-        backgroundColor: 'lightblue',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        marginBottom: 20, // Margin between header and content
-      },
+      // header: {
+      //   height: 50,
+      //   backgroundColor: 'lightblue',
+      //   justifyContent: 'center',
+      //   alignItems: 'center',
+      //   width: '100%',
+      //   marginBottom: 20, // Margin between header and content
+      // },
       content: {
         flex: 1,
         justifyContent: 'center',
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
       // }
       results: {
         //height: 'auto'
-        height: Dimensions.get('window').height*0.8,
+        height: Dimensions.get('window').height*0.9,
         width: Dimensions.get('window').width*0.85
       }
 });
