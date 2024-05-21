@@ -64,6 +64,9 @@ const MediaPage = (props) => {
             if (response.ok) {
                 console.log('Item added to wishlist successfully');
                 // we should let the user know as well that an item was added
+            } else if(response.status === 400){
+                console.log('Item is already in the wishlist');
+                Alert.alert('Error', 'Item is already in the wishlist');
             } else {
                 console.error('Error adding item to wishlist');
             }

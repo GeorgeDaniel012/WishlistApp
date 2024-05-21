@@ -8,8 +8,20 @@ const {fetchMovieShowInfoById} = require("../api-calls/tmdbApiRoutes");
 // Route to add an item to a user's wishlist
 router.post('/add', async (req, res) => {
   try {
-    console.log(req.body);
     const { userId, typeOfMedia, mediaId } = req.body;
+
+    // Check if the item already exists in the wishlist
+    const existingItem = await Wishlist.findOne({
+      where: { userId, typeOfMedia, mediaId }
+    });
+
+    if (existingItem) {
+      console.error('Item is already in the wishlist')
+      res.status(400).json({ message: 'Item is already in the wishlist' });
+      return;
+    }
+
+    // If the item does not exist, create a new wishlist item
     const newItem = await Wishlist.create({ userId, typeOfMedia, mediaId });
     res.status(201).json({ message: 'Item added to wishlist successfully' });
   } catch (error) {
