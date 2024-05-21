@@ -131,11 +131,11 @@ async function transformJsonToJson(mediaList){
         ({name: (typeof(obj.title)==='undefined' ? obj.name : obj.title), 
         id: obj.id,  
         typeOfMedia: obj.typeOfMedia, 
-        imageUrl: 'http://image.tmdb.org/t/p/original'+obj.poster_path,
+        imageUrl: obj.poster_path,
         status: obj.status,
         wishlistId: obj.wishlistId
     }))
 
-    return [...resultGames,...movieOrTv];
+    return [...resultGames,...movieOrTv].sort((a, b) => a.wishlistId - b.wishlistId);
 }
 module.exports = router;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { SafeAreaView, View, Text, StyleSheet, TextInput, Button, Alert, Dimensions } from 'react-native';
 import configData from "../config.json";
 import SearchResults from "./SearchResults";
@@ -9,8 +9,12 @@ const SearchPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResultsGames, setSearchResultsGames] = useState([]);
     const [searchResultsMTV, setSearchResultsMTV] = useState([]);
+    const textInputRef = useRef(null);
 
     const handleSearch = () => {
+      // Make the TextInput lose focus
+      textInputRef.current.blur();
+
       // Send the search query to the backend
 
       // FOR TESTING TMDB API
@@ -85,6 +89,7 @@ const SearchPage = () => {
           <View style={styles.header}>
             <View style={styles.searchContainer}>
               <TextInput
+                ref = {textInputRef}
                 autoFocus = {true}
                 style={styles.input}
                 placeholder="Enter your search query"

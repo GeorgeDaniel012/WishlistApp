@@ -36,7 +36,8 @@ const Profile = () => {
           </View>
           <View style={styles.results}>
             {searchResults.length != 0
-                ? <WishlistResults data={searchResults} loadWishlist={loadWishlist}></WishlistResults>
+                //? <WishlistResults data={searchResults} loadWishlist={loadWishlist}></WishlistResults>
+                ? <WishlistResults data={searchResults}></WishlistResults>
                 : null
               }
           </View>

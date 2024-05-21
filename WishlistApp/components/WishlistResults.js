@@ -27,7 +27,8 @@ const WishlistResults = (props) => {
             /> */}
             {
                 props.data.map((obj, index) => (
-                    <WishlistItem object={obj} key={index} loadWishlist={props.loadWishlist}/>
+                    //<WishlistItem object={obj} key={index} loadWishlist={props.loadWishlist}/>
+                    <WishlistItem object={obj} key={index}/>
                 ))
             }
             {/* <Result object={props.data[0]}/> */}

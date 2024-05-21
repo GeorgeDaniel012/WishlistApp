@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 const WishlistItem = (props) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [currentStatus, setCurrentStatus] = useState(props.object.status);
+    const [exists, setExists] = useState(true);
 
     const statuses = ["planning", "watching/playing", "dropped", "completed"];
     
@@ -20,14 +21,32 @@ const WishlistItem = (props) => {
                 id: props.object.wishlistId,
                 status: newStatus
             }),
+        }).catch(error => {
+            console.error('Error:', error);
+            Alert.alert('Error', 'Failed to change status');
         })
 
         console.log(`Status changed to: ${newStatus}`);
         setCurrentStatus(newStatus);
         //props.loadWishlist();
-        // You can add more logic here to handle the status change, e.g., API call
         setModalVisible(false);
     };
+
+    const deleteItem = () => {
+        fetch(configData.connection + "/wishlist/" + props.object.wishlistId, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+        }).catch(error => {
+            console.error('Error:', error);
+            Alert.alert('Error', 'Failed to remove item from wishlist');
+        })
+
+        console.log(`Item ${props.object.wishlistId} deleted`);
+        setExists(false);
+        setModalVisible(false);
+    }
 
     const navigation = useNavigation();
 
@@ -35,7 +54,7 @@ const WishlistItem = (props) => {
         navigation.navigate('MediaPage', { mediaId: props.object.id, typeOfMedia: props.object.typeOfMedia });
     };
 
-    return (
+    return exists ? (
         <TouchableOpacity style={styles.result} onPress={viewMedia}>
             <View style={styles.textContainer}>
                 <Text>Name: {props.object.name}</Text>
@@ -46,7 +65,7 @@ const WishlistItem = (props) => {
             </View>
             <View style={styles.imageContainer}>
                 <Image
-                    source={{ uri: props.object.imageUrl }} // Use online URL
+                    source={{ uri: props.object.imageUrl }}
                     style={styles.image}
                     resizeMode="cover"
                 />
@@ -65,6 +84,11 @@ const WishlistItem = (props) => {
             >
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
+                        <Text style={styles.modalText}>Options:</Text>
+                        <TouchableOpacity onPress={deleteItem}>
+                            <Text style={styles.modalItem}>Delete Item</Text>
+                        </TouchableOpacity>
+                        <Text style={styles.modalText}>Change Status:</Text>
                         <FlatList
                             data={statuses}
                             keyExtractor={(item) => item}
@@ -74,12 +98,12 @@ const WishlistItem = (props) => {
                                 </TouchableOpacity>
                             )}
                         />
-                        <Button title="Close" onPress={() => setModalVisible(false)} />
+                        <Button title="Close" style={styles.modalClose} onPress={() => setModalVisible(false)} />
                     </View>
                 </View>
             </Modal>
         </TouchableOpacity>
-    );
+    ) : <></>;
 };
 
 const styles = StyleSheet.create({
@@ -103,9 +127,9 @@ const styles = StyleSheet.create({
         marginLeft: 10
     },
     image: {
-        width: 80, // Adjust image width
-        height: 80, // Adjust image height
-        borderRadius: 40 // Makes it circular
+        width: 80,
+        height: 80,
+        borderRadius: 40
     },
     optionsButton: {
         fontSize: 36,
@@ -126,9 +150,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     modalItem: {
-        padding: 10,
+        padding: 5,
         fontSize: 18,
         textAlign: 'center',
+    },
+    modalText: {
+        fontSize: 20,
+        textAlign: 'center',
+        padding: 10
+    },
+    modalClose: {
+        padding: 10
     }
 });
 

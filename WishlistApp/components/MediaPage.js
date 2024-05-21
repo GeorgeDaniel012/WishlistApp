@@ -62,6 +62,7 @@ const MediaPage = (props) => {
                 }),
             });
             if (response.ok) {
+                Alert.alert('Success', `Item added to wishlist successfully`);
                 console.log('Item added to wishlist successfully');
                 // we should let the user know as well that an item was added
             } else if(response.status === 400){
