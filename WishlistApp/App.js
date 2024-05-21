@@ -7,7 +7,8 @@ import configData from "./config.json";
 import SearchPage from './components/SearchPage';
 import HomeScreen from './components/HomeScreen';
 import Profile from './components/Profile';
-import MediaInfo from './components/MediaInfo';
+import MediaPage from './components/MediaPage';
+import GoToProfileButton from './components/GoToProfileButton';
 
 const Stack = createNativeStackNavigator();
 
@@ -81,7 +82,7 @@ const App = () => {
           //   text: 'Search' }}
           options={({ navigation }) => ({
             title: '',
-            headerLeft: () => <MyButton navigation={navigation} page='Profile'/>,
+            headerLeft: () => <GoToProfileButton navigation={navigation} page='Profile'/>,
             headerRight: () => <MyButton navigation={navigation} page='Search'/>,
           })}
           style = {styles.button}
@@ -96,7 +97,7 @@ const App = () => {
         />
         <Stack.Screen
           name = "MediaPage"
-          component = {MediaInfo}
+          component = {MediaPage}
         />
       </Stack.Navigator>
     </NavigationContainer>
