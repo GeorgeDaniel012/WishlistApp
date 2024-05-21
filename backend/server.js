@@ -2,8 +2,8 @@ const express = require('express');
 const { Sequelize } = require('sequelize');
 const bodyParser = require('body-parser');
 const wishlistRoutes = require('./routers/wishlistRoutes.js');
-const igdbRoutes = require('./api-calls/igdbApiRoutes.js');
-const tmdbRoutes = require('./api-calls/tmdbApiRoutes.js');
+const {igdbRoutes} = require('./api-calls/igdbApiRoutes.js');
+const {tmdbRoutes} = require('./api-calls/tmdbApiRoutes.js');
 
 const app = express();
 const fs = require('fs');
@@ -109,3 +109,5 @@ app.post('/search', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+
