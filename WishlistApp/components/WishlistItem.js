@@ -8,7 +8,7 @@ const WishlistItem = (props) => {
     const [currentStatus, setCurrentStatus] = useState(props.object.status);
 
     const statuses = ["planning", "watching/playing", "dropped", "completed"];
-
+    
     const changeStatus = (newStatus) => {
         // Function to change the status of the item
         fetch(configData.connection + "/wishlist/", {
@@ -29,8 +29,14 @@ const WishlistItem = (props) => {
         setModalVisible(false);
     };
 
+    const navigation = useNavigation();
+
+    const viewMedia = () => {
+        navigation.navigate('MediaPage', { mediaId: props.object.id, typeOfMedia: props.object.typeOfMedia });
+    };
+
     return (
-        <View style={styles.result}>
+        <TouchableOpacity style={styles.result} onPress={viewMedia}>
             <View style={styles.textContainer}>
                 <Text>Name: {props.object.name}</Text>
                 <Text>Id: {props.object.id}</Text>
@@ -46,7 +52,7 @@ const WishlistItem = (props) => {
                 />
             </View>
             <TouchableOpacity onPress={() => setModalVisible(true)}>
-                <Text style={styles.optionsButton}>⋮</Text>
+                <Text style={styles.optionsButton}> ⋮ </Text>
             </TouchableOpacity>
 
             <Modal
@@ -72,7 +78,7 @@ const WishlistItem = (props) => {
                     </View>
                 </View>
             </Modal>
-        </View>
+        </TouchableOpacity>
     );
 };
 
@@ -102,7 +108,7 @@ const styles = StyleSheet.create({
         borderRadius: 40 // Makes it circular
     },
     optionsButton: {
-        fontSize: 24,
+        fontSize: 36,
         fontWeight: 'bold',
         paddingHorizontal: 10
     },
