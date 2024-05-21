@@ -35,8 +35,14 @@ async function fetchMovieShowInfoById(mediaId, mediaType){
         }
     });
     //console.log(response.data);
+    const item = response.data;
+    if(typeof item.poster_path === "undefined" || item.poster_path === null){
+        item.poster_path = 'https://i.imgur.com/VCMGiHY.png';
+    } else {
+        item.poster_path = 'http://image.tmdb.org/t/p/original/' + item.poster_path;
+    }
 
-    return response.data;
+    return item;
 }
 
 //fetchMovieShowInfoById('tt15239678');
