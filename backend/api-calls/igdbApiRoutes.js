@@ -61,6 +61,10 @@ async function fetchGameInfo() {
 
     const gameIds = transformedArray.map(item => item.id);
     console.log("size: ", gameIds.length);
+
+    if(gameIds.length === 0){
+      return [];
+    }
     
     let imageUrlsMap = await fetchGameImages(gameIds);
     for(let ob of transformedArray){
