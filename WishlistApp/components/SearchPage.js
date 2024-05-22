@@ -9,6 +9,7 @@ const SearchPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResultsGames, setSearchResultsGames] = useState([]);
     const [searchResultsMTV, setSearchResultsMTV] = useState([]);
+    const [hasSearched, setHasSearched] = useState(false);
     const textInputRef = useRef(null);
 
     const handleSearch = () => {
@@ -62,10 +63,11 @@ const SearchPage = () => {
           },
       })
         .then(responseGames => responseGames.json())
-        .then(data => setSearchResultsGames(data))
+        .then(data => {setSearchResultsGames(data); setHasSearched(true);})
         .catch(error => {
           console.error('Error:', error);
           Alert.alert('Error', 'Failed to fetch search results for games');
+          setHasSearched(true);
         });
       
       //here tmdb
@@ -76,10 +78,11 @@ const SearchPage = () => {
         },
       })
         .then(responseMTV => responseMTV.json())
-        .then(data => setSearchResultsMTV(data))
+        .then(data => {setSearchResultsMTV(data); setHasSearched(true);})
         .catch(error => {
           console.error('Error:', error);
           Alert.alert('Error', 'Failed to fetch search results for movies and TV shows');
+          setHasSearched(true);
         });
     };
   
@@ -112,11 +115,11 @@ const SearchPage = () => {
                   <Text>Game results: </Text>
                   <SearchResults data={searchResultsGames}/>
                 </>
-              ) : null}
+              ) : (null)}
+              {searchResultsMTV.length == 0 && searchResultsGames.length == 0 && hasSearched == true ? (
+                <Text>No results.</Text>
+              ) : (null)}
             </>
-          </View>
-          <View style={styles.content}>
-            {/* Other content goes here */}
           </View>
         </View>
       </SafeAreaView>
@@ -167,20 +170,18 @@ const styles = StyleSheet.create({
         backgroundColor:  '#ADD8E6',
         height: Dimensions.get('window').height
       },
-      // results: {
-      //   flex: 1,
-      //   width: '100%',
-      //   height: Dimensions.get('window').height*20,
-      //   flexGrow: 1,
-      //   backgroundColor: 'red',
-      //   overflow: 'scroll',
-      //   margin: 0,
-      //   paddingBottom: '100%'
-      // }
+      noResults: {
+        verticalAlign: 'top',
+        alignItems: 'top',
+        flexDirection: 'row',
+        //backgroundColor: 'black'
+        //marginBottom: Dimensions.get('window').height*0.33
+      },
       results: {
         //height: 'auto'
         height: Dimensions.get('window').height*0.8,
-        width: Dimensions.get('window').width*0.85
+        width: Dimensions.get('window').width*0.85,
+        //backgroundColor: 'black'
       }
 });
 
