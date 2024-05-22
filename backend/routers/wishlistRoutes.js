@@ -94,13 +94,15 @@ router.put('/', async (req, res) => {
 */
 async function transformJsonToJson(mediaList){
     let newList=[];
+    console.log(mediaList);
     const gameMediaIds = mediaList.filter(media => media.typeOfMedia === "game").map(media => media.mediaId);
     const gameMediaStatus = mediaList.filter(media => media.typeOfMedia === "game").map(media => media.status);
-    const gameWishlsitIds = mediaList.filter(media => media.typeOfMedia === "game").map(media => media.id);
+    const gameWishlistIds = mediaList.filter(media => media.typeOfMedia === "game").map(media => media.id);
     let gameMediaIdsMap={};
     for (let i=0; i<gameMediaIds.length; i++){
         gameMediaIdsMap[gameMediaIds[i]]=i;
     }
+    console.log(gameWishlistIds);
     
     let resultGames = await fetchGamesInfoByIds(gameMediaIds);
     // resultGames.forEach(obj => {
@@ -108,12 +110,18 @@ async function transformJsonToJson(mediaList){
     //     //obj.status = gameMediaStatus[i];
     // });
     for(let i = 0; i < resultGames.length; i++){
-        let obj = resultGames[i]
+        let obj = resultGames[i];
         obj.sortId = gameMediaIdsMap[obj.id];
-        obj.status = gameMediaStatus[i];
-        obj.wishlistId = gameWishlsitIds[i];
+        //obj.status = gameMediaStatus[i];
+        //obj.wishlistId = gameWishlistIds[i];
     }
     resultGames.sort((a, b) => a.sortId - b.sortId);
+    for(let i = 0; i < resultGames.length; i++){
+        let obj = resultGames[i];
+        obj.status = gameMediaStatus[i];
+        obj.wishlistId = gameWishlistIds[i];
+    }
+    
 
     const movieOrTvPromises = mediaList
         .filter(media => media.typeOfMedia === 'movie' || media.typeOfMedia === 'tv')
@@ -123,7 +131,6 @@ async function transformJsonToJson(mediaList){
             status: media.status,
             wishlistId: media.id
         }));
-    movieOrTvPromises
     
     let movieOrTv = await Promise.all(movieOrTvPromises);    
     
@@ -136,6 +143,8 @@ async function transformJsonToJson(mediaList){
         wishlistId: obj.wishlistId
     }))
 
-    return [...resultGames,...movieOrTv].sort((a, b) => a.wishlistId - b.wishlistId);
+    const returnList = [...resultGames,...movieOrTv].sort((a, b) => a.wishlistId - b.wishlistId);
+    console.log(returnList);
+    return returnList;
 }
 module.exports = router;
