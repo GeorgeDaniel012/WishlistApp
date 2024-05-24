@@ -1,17 +1,44 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, FlatList, Button } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, FlatList, Button, Dimensions, Alert, TouchableWithoutFeedback } from 'react-native';
 import configData from '../config.json';
 import { useNavigation } from '@react-navigation/native';
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+
+const scaleFontSize = (size) => {
+    const baseWidth = 375; // iPhone 8 screen width (for some reason)
+    return size * (screenWidth / baseWidth);
+};
 
 const WishlistItem = (props) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [currentStatus, setCurrentStatus] = useState(props.object.status);
     const [exists, setExists] = useState(true);
 
-    const statuses = ["planning", "watching/playing", "dropped", "completed"];
+    const statuses = [
+        {
+            "id": 1,
+            "statusName": "planning",
+            "color": "#FDDA0D",
+        },
+        {
+            "id": 2,
+            "statusName": props.object.typeOfMedia === "game" ? "playing" : "watching",
+            "color": "#6495ED",
+        },
+        {
+            "id": 3,
+            "statusName": "dropped",
+            "color": "#D22B2B",
+        },
+        {
+            "id": 4,
+            "statusName": "completed",
+            "color": "#50C878",
+        }
+    ];
     
     const changeStatus = (newStatus) => {
-        // Function to change the status of the item
         fetch(configData.connection + "/wishlist/", {
             method: 'PUT',
             headers: {
@@ -24,11 +51,10 @@ const WishlistItem = (props) => {
         }).catch(error => {
             console.error('Error:', error);
             Alert.alert('Error', 'Failed to change status');
-        })
+        });
 
         console.log(`Status changed to: ${newStatus}`);
         setCurrentStatus(newStatus);
-        //props.loadWishlist();
         setModalVisible(false);
     };
 
@@ -41,12 +67,12 @@ const WishlistItem = (props) => {
         }).catch(error => {
             console.error('Error:', error);
             Alert.alert('Error', 'Failed to remove item from wishlist');
-        })
+        });
 
         console.log(`Item ${props.object.wishlistId} deleted`);
         setExists(false);
         setModalVisible(false);
-    }
+    };
 
     const navigation = useNavigation();
 
@@ -55,86 +81,112 @@ const WishlistItem = (props) => {
     };
 
     return exists ? (
-        <TouchableOpacity style={styles.result} onPress={viewMedia}>
-            <View style={styles.textContainer}>
-                <Text>Name: {props.object.name}</Text>
-                <Text>Id: {props.object.id}</Text>
-                <Text>Media Type: {props.object.typeOfMedia}</Text>
-                <Text>Status: {currentStatus}</Text>
-                {/* <Text>Wishlist id: {props.object.wishlistId} </Text> */}
-            </View>
-            <View style={styles.imageContainer}>
-                <Image
-                    source={{ uri: props.object.imageUrl }}
-                    style={styles.image}
-                    resizeMode="cover"
-                />
-            </View>
-            <TouchableOpacity onPress={() => setModalVisible(true)}>
-                <Text style={styles.optionsButton}> ⋮ </Text>
-            </TouchableOpacity>
-
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                }}
-            >
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        <Text style={styles.modalText}>Options:</Text>
-                        <TouchableOpacity onPress={deleteItem}>
-                            <Text style={styles.modalItem}>Delete Item</Text>
-                        </TouchableOpacity>
-                        <Text style={styles.modalText}>Change Status:</Text>
-                        <FlatList
-                            data={statuses}
-                            keyExtractor={(item) => item}
-                            renderItem={({ item }) => (
-                                <TouchableOpacity onPress={() => changeStatus(item)}>
-                                    <Text style={styles.modalItem}>{item}</Text>
-                                </TouchableOpacity>
-                            )}
-                        />
-                        <Button title="Close" style={styles.modalClose} onPress={() => setModalVisible(false)} />
+        <View style={styles.mainContainer}>
+            <View style={styles.result}>
+                <TouchableOpacity style={styles.contentContainer} onPress={viewMedia}>
+                    <View style={styles.textContainer}>
+                        <Text>{props.object.name}</Text>
+                        <Text>Id: {props.object.id}</Text>
+                        <Text>Media Type: {props.object.typeOfMedia}</Text>
+                        <Text>Status: {currentStatus}</Text>
                     </View>
-                </View>
-            </Modal>
-        </TouchableOpacity>
-    ) : <></>;
+                    <View style={styles.imageContainer}>
+                        <Image
+                            source={{ uri: props.object.imageUrl }}
+                            style={styles.image}
+                            resizeMode="cover"
+                        />
+                    </View>
+                </TouchableOpacity>
+
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        setModalVisible(!modalVisible);
+                    }}
+                >
+                    <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+                        <View style={styles.modalContainer}>
+                            <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
+                                <View style={styles.modalContent}>
+                                    <Text style={styles.modalText}>Options:</Text>
+                                    <TouchableOpacity onPress={deleteItem}>
+                                        <Text style={styles.modalItem}>Delete Item</Text>
+                                    </TouchableOpacity>
+                                    <Text style={styles.modalText}>Change Status:</Text>
+                                    <FlatList
+                                        data={statuses}
+                                        keyExtractor={(item) => item.id}
+                                        renderItem={({ item }) => (
+                                            <TouchableOpacity onPress={() => changeStatus(item.statusName)}>
+                                                <Text style={[styles.modalItem, {color: item.color}]}>{item.statusName}</Text>
+                                            </TouchableOpacity>
+                                        )}
+                                    />
+                                    {/* <Button title="Close" style={styles.modalClose} onPress={() => setModalVisible(false)} /> */}
+                                </View>
+                            </TouchableWithoutFeedback>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </Modal>
+            </View>
+
+            <TouchableOpacity style={styles.optionsButtonContainer} onPress={() => setModalVisible(true)}>
+                <Text style={styles.optionsButton}> ⋮</Text>
+            </TouchableOpacity>
+        </View>
+    ) : null;
 };
 
 const styles = StyleSheet.create({
+    mainContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between', // Ensures the button is to the far right
+        alignItems: 'center',
+        marginBottom: 5,
+        marginTop: 5,
+    },
     result: {
+        flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
         borderStyle: 'solid',
-        borderRadius: 15,
+        borderRadius: 8,
         borderWidth: 3,
         borderColor: 'black',
         backgroundColor: 'white',
-        marginBottom: 5,
-        marginTop: 5,
-        padding: 5
+        padding: 5,
+    },
+    contentContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     textContainer: {
-        flex: 1
+        flex: 1,
+        paddingRight: 5,
     },
     imageContainer: {
-        marginLeft: 10
+        flex: 1,
+        position: 'relative'
     },
     image: {
-        width: 80,
-        height: 80,
-        borderRadius: 40
+        width: '100%',
+        height: screenHeight * 0.17,
+        maxHeight: '100%',
+        borderRadius: 8
+    },
+    optionsButtonContainer: {
+        marginLeft: 0,
+        //backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        borderRadius: 8,
     },
     optionsButton: {
-        fontSize: 36,
-        fontWeight: 'bold',
-        paddingHorizontal: 10
+        fontSize: scaleFontSize(37),
+        color: 'black'
+        //color: 'white',
     },
     modalContainer: {
         flex: 1,
@@ -152,7 +204,7 @@ const styles = StyleSheet.create({
     modalItem: {
         padding: 5,
         fontSize: 18,
-        textAlign: 'center',
+        textAlign: 'center',   
     },
     modalText: {
         fontSize: 20,
@@ -161,7 +213,13 @@ const styles = StyleSheet.create({
     },
     modalClose: {
         padding: 10
-    }
+    },
+    // overlay: {
+    //     ...StyleSheet.absoluteFillObject,
+    //     backgroundColor: 'rgba(0,0,0,0.5)', // the background color, made it semi-transparent
+    //     padding: screenWidth * 0.04,
+    //     justifyContent: 'flex-end',
+    // },
 });
 
 export default WishlistItem;

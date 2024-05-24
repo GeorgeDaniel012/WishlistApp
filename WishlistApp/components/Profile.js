@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
       results: {
         //height: 'auto'
         height: Dimensions.get('window').height*0.9,
-        width: Dimensions.get('window').width*0.85
+        width: Dimensions.get('window').width*0.93
       }
 });
 
