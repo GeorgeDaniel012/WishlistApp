@@ -13,6 +13,7 @@ const WishlistResults = (props) => {
         //<ScrollView style = {styles.scrollView}>
         <ScrollView 
             style={styles.scrollView}
+            showsVerticalScrollIndicator={false}
         >
             {/* <Text>{props.data.length}</Text> */}
             {/* <FlatList 
@@ -43,7 +44,6 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 'auto',
         flexGrow: 1,
-        
     },
     // container: {
     //     flex: 1,
