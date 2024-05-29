@@ -94,6 +94,12 @@ const App = () => {
         <Stack.Screen
           name = "Profile"
           component = {Profile}
+          // options={({ navigation }) => ({
+          //   headerRight: () => <Button 
+          //     onPress={() => {navigation.setParams({ settingsVisible: true }); console.log("aaaa")}}
+          //     title="Settings"
+          //   />,
+          // })}
         />
         <Stack.Screen
           name = "MediaPage"
