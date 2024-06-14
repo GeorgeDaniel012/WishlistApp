@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, FlatList, Button, Dimensions, Alert, TouchableWithoutFeedback } from 'react-native';
 import configData from '../config.json';
-import { useNavigation } from '@react-navigation/native';
+import { StackActions, CommonActions, useNavigation } from '@react-navigation/native';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -13,6 +13,7 @@ const scaleFontSize = (size) => {
 const WishlistItem = (props) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [currentStatus, setCurrentStatus] = useState(props.object.status);
+    console.log("name:", props.object.name, "status:", currentStatus);
     const [exists, setExists] = useState(true);
 
     const statuses = [
@@ -48,7 +49,8 @@ const WishlistItem = (props) => {
                 id: props.object.wishlistId,
                 status: newStatus
             }),
-        }).catch(error => {
+        }).then(handleRefresh)
+        .catch(error => {
             console.error('Error:', error);
             Alert.alert('Error', 'Failed to change status');
         });
@@ -76,6 +78,21 @@ const WishlistItem = (props) => {
 
     const navigation = useNavigation();
 
+    
+    const handleRefresh = () => {
+        // navigation.dispatch(
+        //   CommonActions.reset({
+        //     index: 0,
+        //     routes: [{ name: 'Profile'}],
+        //   })
+        // );
+        navigation.dispatch(
+            StackActions.replace('Wishlist')
+        );
+        
+        navigation.navigate('Profile');
+    };
+
     const viewMedia = () => {
         navigation.navigate('MediaPage', { mediaId: props.object.id, typeOfMedia: props.object.typeOfMedia });
     };
@@ -88,7 +105,7 @@ const WishlistItem = (props) => {
                         <Text>{props.object.name}</Text>
                         <Text>Id: {props.object.id}</Text>
                         <Text>Media Type: {props.object.typeOfMedia}</Text>
-                        <Text>Status: {currentStatus}</Text>
+                        <Text>Status: {props.object.status}</Text>
                     </View>
                     <View style={styles.imageContainer}>
                         <Image

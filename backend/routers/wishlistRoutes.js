@@ -45,43 +45,43 @@ router.get('/:userId', async (req, res) => {
   }
 });
 
-router.get('/:userId/sortFilter', async (req, res) => {
-  try {
-    const userId = parseInt(req.params.userId);
-    const wishlistItems = await Wishlist.findAll({ where: { userId } });
-    let newArr = wishlistItems.map(item => item.dataValues);
-    const wishlistItemsParsed = await transformJsonToJson(newArr); // Assuming Sequelize returns instances
+// router.get('/:userId/sortFilter', async (req, res) => {
+//   try {
+//     const userId = parseInt(req.params.userId);
+//     const wishlistItems = await Wishlist.findAll({ where: { userId } });
+//     let newArr = wishlistItems.map(item => item.dataValues);
+//     const wishlistItemsParsed = await transformJsonToJson(newArr); // Assuming Sequelize returns instances
     
-    // sort by typeofmedia, status or wishlist id
-    // sort = parameter returned by req,
-    // sortparameter = 'type' => sort by type
-    // ...
+//     // sort by typeofmedia, status or wishlist id
+//     // sort = parameter returned by req,
+//     // sortparameter = 'type' => sort by type
+//     // ...
 
-    const sortOption = req.query.sortOption;
+//     const sortOption = req.query.sortOption;
 
-    if(sortOption === 'type'){
-      wishlistItemsParsed.sort((a, b) => a.typeOfMedia - b.typeOfMedia);
-    } else if(sortOption === 'status'){
-      wishlistItemsParsed.sort((a, b) => a.statusId - b.statusId);
-    } else {
-      wishlistItemsParsed.sort((a, b) => a.wishlistId - b.wishlistId);
-    }
+//     if(sortOption === 'type'){
+//       wishlistItemsParsed.sort((a, b) => a.typeOfMedia - b.typeOfMedia);
+//     } else if(sortOption === 'status'){
+//       wishlistItemsParsed.sort((a, b) => a.statusId - b.statusId);
+//     } else {
+//       wishlistItemsParsed.sort((a, b) => a.wishlistId - b.wishlistId);
+//     }
 
-    console.log(wishlistItemsParsed);
-    console.log(req.query.sortOption);
-    console.log(typeof req.query.sortOption);
+//     console.log(wishlistItemsParsed);
+//     console.log(req.query.sortOption);
+//     console.log(typeof req.query.sortOption);
 
-    const statusFilter = req.query.statusFilter ? req.query.statusFilter.split(',') : ['planning', 'watching', 'playing', 'dropped', 'completed'];
-    const typeFilter = req.query.typeFilter ? req.query.typeFilter.split(',') : ['game', 'movie', 'tv'];
+//     const statusFilter = req.query.statusFilter ? req.query.statusFilter.split(',') : ['planning', 'watching', 'playing', 'dropped', 'completed'];
+//     const typeFilter = req.query.typeFilter ? req.query.typeFilter.split(',') : ['game', 'movie', 'tv'];
 
-    const filteredWishlist = wishlistItemsParsed.filter(item => typeFilter.includes(item.typeOfMedia) && statusFilter.includes(item.status));
-    console.log(filteredWishlist);
-    res.json(filteredWishlist);
-  } catch (error) {
-    console.error('Error getting wishlist items:', error);
-    res.status(500).json({ message: 'Error getting wishlist items' });
-  }
-})
+//     const filteredWishlist = wishlistItemsParsed.filter(item => typeFilter.includes(item.typeOfMedia) && statusFilter.includes(item.status));
+//     console.log(filteredWishlist);
+//     res.json(filteredWishlist);
+//   } catch (error) {
+//     console.error('Error getting wishlist items:', error);
+//     res.status(500).json({ message: 'Error getting wishlist items' });
+//   }
+// })
 
 // Route to delete an item from a user's wishlist
 router.delete('/:id', async (req, res) => {
@@ -187,13 +187,15 @@ async function transformJsonToJson(mediaList){
     for(const item of returnList){
       let statusId;
       if(item.status === 'planning'){
-        statusId = 0;
-      } else if(item.status === 'watching' || item.status === 'playing'){
         statusId = 1;
-      } else if(item.status === 'completed'){
+      } else if(item.status === 'watching'){
         statusId = 2;
-      } else if(item.status === 'dropped'){
+      } else if(item.status === 'playing'){
         statusId = 3;
+      } else if(item.status === 'completed'){
+        statusId = 4;
+      } else if(item.status === 'dropped'){
+        statusId = 5;
       }
       item.statusId = statusId;
     }
