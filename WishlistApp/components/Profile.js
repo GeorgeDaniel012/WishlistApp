@@ -10,6 +10,7 @@ const windowHeight = Dimensions.get('window').height;
 const Profile = ({ route }) => {
     const [userId, setUserId] = useState(1);
     const [searchResults, setSearchResults] = useState([]);
+    const [modifiedResults, setModifiedResults] = useState([]);
     const [sortOption, setSortOption] = useState('time added');
     const [statusFilter, setStatusFilter] = useState([]);
     const [typeFilter, setTypeFilter] = useState([]);
@@ -19,11 +20,12 @@ const Profile = ({ route }) => {
     const loadWishlist = () => {
       // Send the search query to the backend
 
+      const url = configData.connection+"/wishlist/"+userId;
       //fetch(configData.connection+"/wishlist/"+userId, {
-      const url = configData.connection+"/wishlist/"+userId+'/sortFilter?sortOption='+sortOption+'&statusFilter='+
-        statusFilter.join(',')+'&typeFilter='+typeFilter.join(',');
+      // const url = configData.connection+"/wishlist/"+userId+'/sortFilter?sortOption='+sortOption+'&statusFilter='+
+      //   statusFilter.join(',')+'&typeFilter='+typeFilter.join(',');
 
-      console.log(statusFilter);
+      // console.log(statusFilter);
 
       fetch(url, {
         method: 'GET',
@@ -32,13 +34,32 @@ const Profile = ({ route }) => {
         },
       })
         .then(responseItems => responseItems.json())
-        .then(data => setSearchResults(data))
+        .then(data => {setSearchResults(data); setModifiedResults(data);})
+        //.then(applySortFilter())
         .then(() => setIsLoading(false))
         .catch(error => {
             console.error('Error:', error);
             Alert.alert('Error', 'Failed to fetch wishlist items');
         });
     };
+
+    const applySortFilter = () => {
+      const sortedFilteredResults = searchResults
+        .filter(result => statusFilter.length == 0 || statusFilter.includes(result.status))
+        .filter(result => typeFilter.length == 0 || typeFilter.includes(result.typeOfMedia))
+        .sort((a, b) => {
+          if(sortOption === 'type'){
+            //return a.typeOfMedia - b.typeOfMedia;
+            return a.typeOfMedia.localeCompare(b.typeOfMedia)
+          } else if(sortOption === 'status'){
+            return a.statusId - b.statusId;
+          } else {
+            return a.wishlistId - b.wishlistId;
+          }
+        });
+      //console.log(sortedFilteredResults);
+      setModifiedResults(sortedFilteredResults);
+    }
 
     const navigation = useNavigation();
 
@@ -52,11 +73,16 @@ const Profile = ({ route }) => {
       //     <Button onPress={() => console.log(aaaa)} title="Settings"/>
       //   }
       // })
+    }, []);
+
+    useEffect(() => {
+      //console.log(modifiedResults);
+      applySortFilter();
     }, [sortOption, statusFilter, typeFilter]);
 
     const handleSort = (sortOpt) => {
       if(sortOpt != sortOption){
-        setIsLoading(true);
+        //setIsLoading(true);
       }
       setSortOption(sortOpt);
     }
@@ -130,6 +156,8 @@ const Profile = ({ route }) => {
             visible={settingsVisible}
             onRequestClose={() => {
               setSettingsVisible(false);
+              console.log("applied stuff");
+              //applySortFilter();
             }}
         >
             <TouchableWithoutFeedback onPress={() => setSettingsVisible(false)}>
@@ -160,6 +188,7 @@ const Profile = ({ route }) => {
                                   const updatedFilter = statusFilter.includes(item.filterName)
                                     ? statusFilter.filter(status => status !== item.filterName)
                                     : [...statusFilter, item.filterName];
+                                  console.log(updatedFilter);
                                   setStatusFilter(updatedFilter);
                                 }}
                               />
@@ -201,7 +230,7 @@ const Profile = ({ route }) => {
               <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator size="large" color="#0000ff" />
               </View>
-              : <WishlistResults data={searchResults}></WishlistResults>
+              : <WishlistResults data={modifiedResults}></WishlistResults>
             }
             {/* {searchResults.length != 0
                 //? <WishlistResults data={searchResults} loadWishlist={loadWishlist}></WishlistResults>
