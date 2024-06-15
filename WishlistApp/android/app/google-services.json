@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "997213193190",
+    "project_id": "wishlistapp-f7953",
+    "storage_bucket": "wishlistapp-f7953.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:997213193190:android:f256fc7fffb53b4d1e0c27",
+        "android_client_info": {
+          "package_name": "com.callbackhell.WishlistApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "997213193190-ee6cl69i4osibf0pfq7erakcf9tt822k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.callbackhell.WishlistApp",
+            "certificate_hash": "0ad983a949c9ffbba3ad3fa4b2e40446cc7868c0"
+          }
+        },
+        {
+          "client_id": "997213193190-cm2ps11frvb0dq0ehihog68ugf1spp2t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3nVLD_0JWd_mmuW2juSAn9_579x_k5_A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "997213193190-a7i0to41rq9t5d0v6q7spnst2oq7ch7v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

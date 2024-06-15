@@ -1,4 +1,4 @@
-package com.anonymous.WishlistApp
+package com.callbackhell.WishlistApp
 
 import android.os.Build
 import android.os.Bundle

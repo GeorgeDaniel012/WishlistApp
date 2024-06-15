@@ -12,20 +12,31 @@
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
-      "**/*"
+      "*/"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.callbackhell.WishlistApp"
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.WishlistApp"
+      "package": "com.callbackhell.WishlistApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "00a322a6-d729-4e61-9591-55244701d3b1"
+      },
+      "expoClient": {
+        "name": "Expo Go"
+      }
+    },
+    "scheme": "WishlistApp"
   }
 }

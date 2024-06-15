@@ -27,7 +27,7 @@ const Wishlist = sequelize.define('Wishlist', {
     autoIncrement: true
   },
   userId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false
   },
   typeOfMedia: {

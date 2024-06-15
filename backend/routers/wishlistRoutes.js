@@ -33,7 +33,7 @@ router.post('/add', async (req, res) => {
 // Route to get all items of a user's wishlist
 router.get('/:userId', async (req, res) => {
   try {
-    const userId = parseInt(req.params.userId);
+    const userId = req.params.userId;
     const wishlistItems = await Wishlist.findAll({ where: { userId } });
     let newArr = wishlistItems.map(item => item.dataValues);
     const wishlistItemsParsed = await transformJsonToJson(newArr); // Assuming Sequelize returns instances
@@ -153,7 +153,7 @@ async function transformJsonToJson(mediaList){
         //obj.status = gameMediaStatus[i];
         //obj.wishlistId = gameWishlistIds[i];
     }
-    resultGames.sort((a, b) => a.sortId - b.sortId);
+    // resultGames.sort((a, b) => a.sortId - b.sortId);
     for(let i = 0; i < resultGames.length; i++){
         let obj = resultGames[i];
         obj.status = gameMediaStatus[i];
