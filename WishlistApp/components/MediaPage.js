@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Text, Alert, Image, ActivityIndicator, Button, StyleSheet, Dimensions } from 'react-native';
 import configData from '../config.json';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -15,6 +17,8 @@ const MediaPage = (props) => {
 
     const [mediaInfo, setMediaInfo] = useState();
     const [isLoading, setIsLoading] = useState(true);
+
+    const navigation = useNavigation();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -50,13 +54,25 @@ const MediaPage = (props) => {
 
     const addToWishlist = async () => {
         try {
+            const userString = await AsyncStorage.getItem('@user');
+
+            if(!userString){
+                Alert.alert("Failed", "Please log in to add this item to your wishlist.");
+                navigation.navigate("Wishlist");
+                return;
+            }
+
+            const uid = JSON.parse(userString).uid;
+            console.log(uid);
+            console.log(userString);
+
             const response = await fetch(configData.connection + '/wishlist/add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    userId: 1,
+                    userId: uid,
                     typeOfMedia: typeOfMedia,
                     mediaId: mediaId
                 }),

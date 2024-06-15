@@ -4,6 +4,7 @@ import CheckBox from 'expo-checkbox';
 import configData from "../config.json";
 import WishlistResults from "./WishlistResults";
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -17,10 +18,15 @@ const Profile = ({ route }) => {
     const [settingsVisible, setSettingsVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
-    const loadWishlist = () => {
+    const loadWishlist = async () => {
       // Send the search query to the backend
 
-      const url = configData.connection+"/wishlist/"+userId;
+      const userString = await AsyncStorage.getItem('@user');
+
+      const uid = JSON.parse(userString).uid;
+      console.log(uid);
+      console.log(userString);
+      const url = configData.connection+"/wishlist/"+uid;
       //fetch(configData.connection+"/wishlist/"+userId, {
       // const url = configData.connection+"/wishlist/"+userId+'/sortFilter?sortOption='+sortOption+'&statusFilter='+
       //   statusFilter.join(',')+'&typeFilter='+typeFilter.join(',');

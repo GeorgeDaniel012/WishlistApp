@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, TextInput, Text, StyleSheet, TouchableOpacity, Button, Alert, SafeAreaView, Dimensions} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -9,8 +10,13 @@ const scaleFontSize = (size) => {
 };
 
 const GoToProfileButton = ({navigation, route, page}) => {
-  const handlePress = () => {
-    navigation.navigate(page);
+  const handlePress = async () => {
+    if(!(await AsyncStorage.getItem('@user'))){
+      Alert.alert("Failed", "You are not logged in.");
+    }
+    else {
+      navigation.navigate(page);
+    }
   };
 
   const content =
