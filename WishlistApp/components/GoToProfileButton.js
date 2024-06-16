@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   text: {
     textAlign: 'left',
     fontWeight: 'bold',
-    color: 'black',
+    color: 'white',
     fontSize: scaleFontSize(20)
   }
 })
