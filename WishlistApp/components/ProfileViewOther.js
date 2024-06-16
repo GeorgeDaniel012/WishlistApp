@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, Button, Image, View, StyleSheet, Dimensions, ScrollView } from 'react-native';
+import { Text, Button, Image, View, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from 'react-native';
 import * as configData from '../config.json';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,17 +14,21 @@ const scaleFontSize = (size) => {
   return size * (screenWidth / baseWidth);
 };
 
-const ProfileView = () => {
-  const [imageData, setImageData] = useState(null);
-  const [displayName, setDisplayName] = useState(null);
-  const [description, setDescription] = useState(null);
+const ProfileViewOther = ( props ) => {
+    const { route } = props;
+    const { userId } = route.params;
+
+    const [imageData, setImageData] = useState(null);
+    const [displayName, setDisplayName] = useState(null);
+    const [description, setDescription] = useState(null);
+
+    const viewWishlist = () => {
+        navigation.navigate('ProfileWishlistOther', { userId: userId });
+    };
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const userString = await AsyncStorage.getItem('@user');
-        const userId = JSON.parse(userString).uid;
-
         const profileResponse = await axios.get(configData.connection + '/userprofile/user/' + userId);
         setDisplayName(profileResponse.data.displayName);
         setDescription(profileResponse.data.description);
@@ -50,11 +54,7 @@ const ProfileView = () => {
   return (
     <View style={styles.container}>
       <Image
-        source={
-          imageData !== null
-            ? { uri: imageData }
-            : { uri: 'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg' }
-        }
+        source={imageData !== null ? { uri: imageData } : { uri: 'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg' }}
         style={styles.profileImage}
       />
       <Text style={styles.nameText}>{displayName}</Text>
@@ -62,8 +62,9 @@ const ProfileView = () => {
         <Text style={styles.descriptionText}>{description}</Text>
       </ScrollView>
       <View style={styles.buttonContainer}>
-        <MyButton color="rgba(0, 75, 128, 50)" title="View Wishlist" navigation={navigation} page="ProfileWishlist" style={styles.button} />
-        <MyButton color="rgba(0, 75, 128, 50)" title="Edit Profile" navigation={navigation} page='EditProfile' style={styles.button} />
+        <TouchableOpacity style={styles.button} onPress={viewWishlist}>
+          <Text style={styles.buttonText}>View Wishlist</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -75,8 +76,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#ADD8E6',
-    position: 'relative',
+    backgroundColor: '#ADD8E6'
   },
   profileImage: {
     width: 200,
@@ -87,10 +87,10 @@ const styles = StyleSheet.create({
   nameText: {
     fontSize: scaleFontSize(48),
     fontWeight: 'bold',
-    marginTop: screenHeight * 0.02,
+    marginTop: screenHeight*0.02,
   },
   descriptionContainer: {
-    marginVertical: screenHeight * 0.02,
+    marginVertical: screenHeight*0.02
   },
   descriptionText: {
     fontSize: scaleFontSize(24),
@@ -103,18 +103,20 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     marginBottom: 40,
   },
-  searchButtonContainer: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
-  },
   button: {
     flex: 1,
     marginHorizontal: 10,
+    backgroundColor: 'rgba(0, 75, 128, 50)',
+    borderRadius: 10,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
   },
-  searchButton: {
-    // to be added later
+  buttonText: {
+    fontSize: scaleFontSize(24),
+    fontWeight: 'bold',
+    color: 'white',
+    textAlign: 'center',
   },
 });
 
-export default ProfileView;
+export default ProfileViewOther;

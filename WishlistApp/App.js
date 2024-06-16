@@ -11,6 +11,10 @@ import MediaPage from './components/MediaPage';
 import GoToProfileButton from './components/GoToProfileButton';
 import ProfileView from './components/ProfileView';
 import ChangeImage from './components/ChangeImage';
+import EditProfile from './components/EditProfile';
+import UserSearchPage from './components/UserSearchPage';
+import ProfileViewOther from './components/ProfileViewOther';
+import ProfileWishlistOther from './components/ProfileWishlistOther';
 
 const Stack = createNativeStackNavigator();
 
@@ -61,9 +65,9 @@ const App = () => {
         initialRouteName='Wishlist'
         screenOptions={{
           headerStyle: {
-            backgroundColor: 'rgba(0, 75, 128, 50)', // Change this to the color you want
+            backgroundColor: 'rgba(0, 75, 128, 50)',
           },
-          headerTintColor: 'rgb(255,255,255)', // Change the text color of the header
+          headerTintColor: 'rgb(255,255,255)',
           headerTitleStyle: {
             fontWeight: 'bold',
           },
@@ -84,8 +88,10 @@ const App = () => {
           //   text: 'Search' }}
           options={({ navigation }) => ({
             title: '',
-            headerLeft: () => <GoToProfileButton navigation={navigation} page='ProfileView'/>,
+            //headerLeft: () => <GoToProfileButton navigation={navigation} page='ProfileView'/>,
+            headerLeft: () => <MyButton navigation={navigation} page='ProfileView' title='Profile'/>,
             headerRight: () => <MyButton navigation={navigation} page='Search'/>,
+            //headerRight: () => <GoToProfileButton navigation={navigation} title='Search Media' page='Search'/>,
           })}
           style = {styles.button}
         />
@@ -95,25 +101,60 @@ const App = () => {
         />
         <Stack.Screen
           name = "ProfileWishlist"
+          options={() => ({
+            title: 'Wishlist',
+          })}
           component = {ProfileWishlist}
-          // options={({ navigation }) => ({
-          //   headerRight: () => <Button 
-          //     onPress={() => {navigation.setParams({ settingsVisible: true }); console.log("aaaa")}}
-          //     title="Settings"
-          //   />,
-          // })}
+        />
+        <Stack.Screen
+          name = "ProfileWishlistOther"
+          options={() => ({
+            title: 'Wishlist',
+          })}
+          component = {ProfileWishlistOther}
         />
         <Stack.Screen
           name = "MediaPage"
+          options={() => ({
+            title: 'Media Page',
+          })}
           component = {MediaPage}
         />
         <Stack.Screen
           name = "ProfileView"
+          options={({ navigation }) => ({
+            title: 'Profile',
+            headerRight: () => <MyButton title="Search Users" navigation={navigation} page='SearchUser'/>,
+          })}
           component = {ProfileView}
         />
         <Stack.Screen
+          name = "ProfileViewOther"
+          options={() => ({
+            title: 'Profile',
+          })}
+          component = {ProfileViewOther}
+        />
+        <Stack.Screen
           name = "ChangeImage"
+          options={() => ({
+            title: 'Change Image',
+          })}
           component = {ChangeImage}
+        />
+        <Stack.Screen
+          name = "EditProfile"
+          options={() => ({
+            title: 'Edit Profile',
+          })}
+          component = {EditProfile}
+        />
+        <Stack.Screen
+          name = "SearchUser"
+          options={() => ({
+            title: 'Search Users',
+          })}
+          component = {UserSearchPage}
         />
       </Stack.Navigator>
     </NavigationContainer>

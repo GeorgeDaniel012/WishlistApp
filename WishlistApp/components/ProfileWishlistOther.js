@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, TextInput, Button, Alert, Dimensions, Modal, TouchableWithoutFeedback, TouchableOpacity, ActivityIndicator, FlatList } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet, ScrollView, TextInput, Button, Alert, Dimensions, Modal, TouchableWithoutFeedback, TouchableOpacity, ActivityIndicator, FlatList } from 'react-native';
 import CheckBox from 'expo-checkbox';
 import configData from "../config.json";
 import WishlistResults from "./WishlistResults";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import WishlistItemOther from './WishlistItemOther';
 
 // const windowHeight = Dimensions.get('window').height;
 
@@ -15,7 +16,7 @@ const scaleFontSize = (size) => {
     return size * (screenWidth / baseWidth);
 };
 
-const ProfileWishlist = ({ route }) => {
+const ProfileWishlistOther = ( props ) => {
     const [userId, setUserId] = useState(1);
     const [searchResults, setSearchResults] = useState([]);
     const [modifiedResults, setModifiedResults] = useState([]);
@@ -26,13 +27,7 @@ const ProfileWishlist = ({ route }) => {
     const [isLoading, setIsLoading] = useState(true);
 
     const loadWishlist = async () => {
-      // Send the search query to the backend
-
-      const userString = await AsyncStorage.getItem('@user');
-
-      const uid = JSON.parse(userString).uid;
-      console.log(uid);
-      console.log(userString);
+      const uid = props.route.params.userId;
       const url = configData.connection+"/wishlist/"+uid;
 
       fetch(url, {
@@ -43,7 +38,7 @@ const ProfileWishlist = ({ route }) => {
       })
         .then(responseItems => responseItems.json())
         .then(data => {setSearchResults(data); setModifiedResults(data);})
-        //.then(applySortFilter())
+        .then(applySortFilter())
         .then(() => setIsLoading(false))
         .catch(error => {
             console.error('Error:', error);
@@ -143,7 +138,7 @@ const ProfileWishlist = ({ route }) => {
     return (
       <SafeAreaView style={styles.container_main}>
         <View style={styles.header}>
-          <Text style={{fontSize: scaleFontSize(20), flexGrow:1}}>Your wishlist contains:</Text>
+          <Text style={{fontSize: scaleFontSize(20), flexGrow:1}}>This wishlist contains:</Text>
           <Button 
             onPress={() => setSettingsVisible(true)}
             title="Settings"
@@ -228,13 +223,21 @@ const ProfileWishlist = ({ route }) => {
               <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator size="large" color="#0000ff" />
               </View>
-              : <WishlistResults data={modifiedResults}></WishlistResults>
+              : <ScrollView 
+                    style={styles.scrollView}
+                    showsVerticalScrollIndicator={false}
+                >
+                    {
+                        modifiedResults.length === 0
+                        ? <Text style={{fontSize: scaleFontSize(18)}}>No results</Text>
+                        : (
+                            modifiedResults.map((obj, index) => (
+                                <WishlistItemOther object={obj} key={index}/>
+                            ))
+                        )
+                    }
+                </ScrollView>
             }
-            {/* {searchResults.length != 0
-                //? <WishlistResults data={searchResults} loadWishlist={loadWishlist}></WishlistResults>
-                ? <WishlistResults data={searchResults}></WishlistResults>
-                : null
-              } */}
           </View>
         </View>
       </SafeAreaView>
@@ -249,12 +252,8 @@ const styles = StyleSheet.create({
       margin: 0,
       alignContent: 'space-around',
       flexDirection: 'row',
-      //justifyContent: 'flex-start',
       alignItems: 'center',
-      //gap: screenWidth*0.08,
       flexShrink: 1,
-      //flexGrow: 1,
-      //gap: screenWidth*0.16,
       paddingLeft: screenWidth*0.03,
       paddingRight: screenWidth*0.03,
     },
@@ -272,7 +271,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
     searchContainer: {
-      flexDirection: 'row', // or 'colomn'
+      flexDirection: 'row',
       alignItems: 'center',
     },
     input: {
@@ -291,6 +290,7 @@ const styles = StyleSheet.create({
       height: Dimensions.get('window').height
     },
     results: {
+      //height: 'auto'
       height: Dimensions.get('window').height*0.81,
       width: Dimensions.get('window').width*0.93
     },
@@ -323,8 +323,9 @@ const styles = StyleSheet.create({
     radioButton: {
       flexDirection: 'row',
       alignItems: 'center',
+      //marginBottom: 10,
       fontSize: 18,
     },
 });
 
-export default ProfileWishlist;
+export default ProfileWishlistOther;

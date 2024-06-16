@@ -3,6 +3,7 @@ const router = express.Router();
 const UserProfile = require('../models/userProfile.js');
 const multer = require('multer');
 const path = require('path');
+const { Op } = require('sequelize');
 const fs = require('fs');
 
 // Route to add an item to a user's wishlist
@@ -30,7 +31,53 @@ const fs = require('fs');
 //   }
 // });
 
-// Route to add an item to a user's wishlist
+router.get('/search/:query', async (req, res) => {
+  try {
+    const query = req.params.query;
+
+    const users = await UserProfile.findAll({
+      where: {
+        displayName: {
+          [Op.like]: `${query}%`
+        }
+      }
+    });
+
+    res.json(users);
+  } catch (error) {
+    console.error('Error searching for users:', error);
+    res.status(500).json({ message: 'Error searching for users' });
+  }
+});
+
+router.get('/user/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const userProfile = await UserProfile.findOne({ where: { userId } });
+
+    res.json(userProfile);
+  } catch (error) {
+    console.error('Error getting user profile:', error);
+    res.status(500).json({ message: 'Error getting user profile' });
+  }
+});
+
+router.get('/:filename', (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(uploadDirectory, filename);
+
+  console.log(filename, "sgggs")
+
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      return res.status(404).send('File not found.');
+    }
+    res.set('Content-Type', 'image');
+    res.send(data);
+  });
+});
+
+// Route to create Profile for a user
 router.post('/add', async (req, res) => {
     try {
       const { userId } = req.body;
@@ -40,7 +87,7 @@ router.post('/add', async (req, res) => {
       });
   
       if (existingProfile) {
-        console.error('User alreaady exists')
+        console.error('User already exists')
         res.status(400).json({ message: 'User alreaady exists' });
         return;
       }
@@ -58,7 +105,7 @@ router.post('/add', async (req, res) => {
         }
       }
   
-      const newUser = await UserProfile.create({ userId, displayName: randomString, description: null, imageName: null });
+      const newUser = await UserProfile.create({ userId, displayName: randomString, description: '', imageName: null });
       res.status(201).json({ message: 'User profile created successfully!' });
     } catch (error) {
       console.error('Error adding item to wishlist:', error);
