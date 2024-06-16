@@ -38,58 +38,8 @@ const WishlistItem = (props) => {
             "color": "#50C878",
         }
     ];
-    
-    const changeStatus = (newStatus) => {
-        fetch(configData.connection + "/wishlist/", {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                id: props.object.wishlistId,
-                status: newStatus
-            }),
-        }).then(handleRefresh)
-        .catch(error => {
-            console.error('Error:', error);
-            Alert.alert('Error', 'Failed to change status');
-        });
-
-        console.log(`Status changed to: ${newStatus}`);
-        setCurrentStatus(newStatus);
-        setModalVisible(false);
-    };
-
-    const deleteItem = () => {
-        fetch(configData.connection + "/wishlist/" + props.object.userId + "/" + props.object.wishlistId, {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-        }).catch(error => {
-            console.error('Error:', error);
-            Alert.alert('Error', 'Failed to remove item from wishlist');
-        });
-
-        console.log(`Item ${props.object.wishlistId} deleted`);
-        setExists(false);
-        setModalVisible(false);
-    };
 
     const navigation = useNavigation();
-
-    const handleRefresh = () => {
-        navigation.dispatch(
-            CommonActions.reset({
-                index: 0,
-                routes: [
-                    { name: 'Wishlist' },
-                    { name: 'ProfileView' },
-                    { name: 'ProfileWishlist' }
-                ],
-            })
-        );
-    };
 
     const viewMedia = () => {
         navigation.navigate('MediaPage', { mediaId: props.object.id, typeOfMedia: props.object.typeOfMedia });
@@ -113,44 +63,7 @@ const WishlistItem = (props) => {
                         />
                     </View>
                 </TouchableOpacity>
-
-                <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => {
-                        setModalVisible(!modalVisible);
-                    }}
-                >
-                    <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-                        <View style={styles.modalContainer}>
-                            <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
-                                <View style={styles.modalContent}>
-                                    <Text style={styles.modalText}>Options:</Text>
-                                    <TouchableOpacity onPress={deleteItem}>
-                                        <Text style={styles.modalItem}>Delete Item</Text>
-                                    </TouchableOpacity>
-                                    <Text style={styles.modalText}>Change Status:</Text>
-                                    <FlatList
-                                        data={statuses}
-                                        keyExtractor={(item) => item.id}
-                                        renderItem={({ item }) => (
-                                            <TouchableOpacity onPress={() => changeStatus(item.statusName)}>
-                                                <Text style={[styles.modalItem, {color: item.color}]}>{item.statusName}</Text>
-                                            </TouchableOpacity>
-                                        )}
-                                    />
-                                    {/* <Button title="Close" style={styles.modalClose} onPress={() => setModalVisible(false)} /> */}
-                                </View>
-                            </TouchableWithoutFeedback>
-                        </View>
-                    </TouchableWithoutFeedback>
-                </Modal>
             </View>
-
-            <TouchableOpacity style={styles.optionsButtonContainer} onPress={() => setModalVisible(true)}>
-                <Text style={styles.optionsButton}> ⋮</Text>
-            </TouchableOpacity>
         </View>
     ) : null;
 };

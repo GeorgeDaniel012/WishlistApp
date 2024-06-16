@@ -9,7 +9,7 @@ const scaleFontSize = (size) => {
   return size * (screenWidth / baseWidth);
 };
 
-const GoToProfileButton = ({navigation, route, page}) => {
+const GoToProfileButton = ({navigation, route, page, title="Profile"}) => {
   const handlePress = async () => {
     if(!(await AsyncStorage.getItem('@user'))){
       Alert.alert("Failed", "You are not logged in.");
@@ -24,7 +24,7 @@ const GoToProfileButton = ({navigation, route, page}) => {
     <View>
       {/* <Button title={page} color='rgba(0,0,0,0)' onPress={handlePress} style = {styles.button}/> */}
       <TouchableOpacity style={styles.button} onPress={handlePress}>
-        <Text style={styles.text}>Profile</Text>
+        <Text style={styles.text}>{title}</Text>
       </TouchableOpacity>
     </View>
   )

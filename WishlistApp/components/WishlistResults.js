@@ -22,20 +22,9 @@ const WishlistResults = (props) => {
             style={styles.scrollView}
             showsVerticalScrollIndicator={false}
         >
-            {/* <Text>{props.data.length}</Text> */}
-            {/* <FlatList 
-                style={styles.scrollView}
-                data={props.data} // Pass the array as data prop
-                keyExtractor={(item) => item.id} // Key extractor function
-                renderItem={({ item }) => {
-                    console.log(item);
-                    return(
-                    <Result object={item} key={item.id}/>
-                );}}
-            /> */}
             {
                 props.data.length === 0
-                ? <Text style={{fontSize: scaleFontSize(18)}}>Wishlist is empty.</Text>
+                ? <Text style={{fontSize: scaleFontSize(18)}}>No results</Text>
                 : (
                     props.data.map((obj, index) => (
                         //<WishlistItem object={obj} key={index} loadWishlist={props.loadWishlist}/>
@@ -43,7 +32,6 @@ const WishlistResults = (props) => {
                     ))
                 )
             }
-            {/* <Result object={props.data[0]}/> */}
         </ScrollView>
     );
 }
@@ -56,10 +44,6 @@ const styles = StyleSheet.create({
         height: 'auto',
         flexGrow: 1,
     },
-    // container: {
-    //     flex: 1,
-    //     flexDirection: 'row-reverse'
-    // }
 })
 
 export default WishlistResults;
