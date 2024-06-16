@@ -2,6 +2,7 @@ const express = require('express');
 const { Sequelize } = require('sequelize');
 const bodyParser = require('body-parser');
 const wishlistRoutes = require('./routers/wishlistRoutes.js');
+const userProfileRoutes = require('./routers/userProfileRoutes.js');
 const {igdbRoutes} = require('./api-calls/igdbApiRoutes.js');
 const {tmdbRoutes} = require('./api-calls/tmdbApiRoutes.js');
 
@@ -34,32 +35,33 @@ const sequelize = new Sequelize(dbName, 'root', '', {
   password: sql_password
 });
 
-const User = sequelize.define('User', {
-  name: Sequelize.STRING,
-  email: Sequelize.STRING,
-});
+// const User = sequelize.define('User', {
+//   name: Sequelize.STRING,
+//   email: Sequelize.STRING,
+// });
 
 sequelize.sync();
 
 app.use(express.json());
 
 // Endpoints
-app.get('/users', async (req, res) => {
-  const users = await User.findAll();
-  res.json(users);
-});
+// app.get('/users', async (req, res) => {
+//   const users = await User.findAll();
+//   res.json(users);
+// });
 
-app.post('/users', async (req, res) => {
-  const { name, email } = req.body;
-  const user = await User.create({ name, email });
-  res.json(user);
-});
-app.use(bodyParser.json());
+// app.post('/users', async (req, res) => {
+//   const { name, email } = req.body;
+//   const user = await User.create({ name, email });
+//   res.json(user);
+// });
+// app.use(bodyParser.json());
 
 
 app.use('/wishlist', wishlistRoutes);
 app.use('/igdbapi', igdbRoutes);
 app.use('/tmdbapi', tmdbRoutes);
+app.use('/userprofile', userProfileRoutes);
 
 // Define a route that responds with a message
 app.get('/', (req, res) => {

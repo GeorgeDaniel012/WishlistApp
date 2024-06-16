@@ -6,9 +6,11 @@ import MyButton from './components/MyButton';
 import configData from "./config.json";
 import SearchPage from './components/SearchPage';
 import HomeScreen from './components/HomeScreen';
-import Profile from './components/Profile';
+import ProfileWishlist from './components/ProfileWishlist';
 import MediaPage from './components/MediaPage';
 import GoToProfileButton from './components/GoToProfileButton';
+import ProfileView from './components/ProfileView';
+import ChangeImage from './components/ChangeImage';
 
 const Stack = createNativeStackNavigator();
 
@@ -82,7 +84,7 @@ const App = () => {
           //   text: 'Search' }}
           options={({ navigation }) => ({
             title: '',
-            headerLeft: () => <GoToProfileButton navigation={navigation} page='Profile'/>,
+            headerLeft: () => <GoToProfileButton navigation={navigation} page='ProfileView'/>,
             headerRight: () => <MyButton navigation={navigation} page='Search'/>,
           })}
           style = {styles.button}
@@ -92,8 +94,8 @@ const App = () => {
           component = {SearchPage}
         />
         <Stack.Screen
-          name = "Profile"
-          component = {Profile}
+          name = "ProfileWishlist"
+          component = {ProfileWishlist}
           // options={({ navigation }) => ({
           //   headerRight: () => <Button 
           //     onPress={() => {navigation.setParams({ settingsVisible: true }); console.log("aaaa")}}
@@ -104,6 +106,14 @@ const App = () => {
         <Stack.Screen
           name = "MediaPage"
           component = {MediaPage}
+        />
+        <Stack.Screen
+          name = "ProfileView"
+          component = {ProfileView}
+        />
+        <Stack.Screen
+          name = "ChangeImage"
+          component = {ChangeImage}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TextInput, Text, StyleSheet, TouchableOpacity, Button, Alert, SafeAreaView, Dimensions} from 'react-native';
 
-const MyButton = ({navigation, route, page}) => {
+const MyButton = ({navigation, route, page, title=page}) => {
   const handlePress = () => {
     //Alert.alert('Button pressed!');
     //navigation.navigate('Search');
@@ -28,7 +28,7 @@ const MyButton = ({navigation, route, page}) => {
           <Text style={[styles.text, {fontSize: font_size}, {color:'rgb(0,0,0)'}]}>{route.params.text}</Text>
         </View> 
       </TouchableOpacity> */}
-      <Button title={page} onPress={handlePress} style = {styles.button}/>
+      <Button title={title} onPress={handlePress} style = {styles.button}/>
     </View>
   )
 
