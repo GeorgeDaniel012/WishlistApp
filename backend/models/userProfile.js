@@ -19,44 +19,40 @@ const sequelize = new Sequelize('sys', 'root', sqlPassword, {
   dialect: 'mysql'
 });
 
-// Define the Wishlist model
-const Wishlist = sequelize.define('Wishlist', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
+const UserProfile = sequelize.define('UserProfile', {
   userId: {
     type: DataTypes.STRING,
-    allowNull: false
+    primaryKey: true,
+    allowNull: true
   },
-  typeOfMedia: {
+  displayName: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
-  mediaId: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
-  status: {
+  description: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true,
+  },
+  imageName: {
+    type: DataTypes.STRING,
+    allowNull: true
   }
 }, {
   timestamps: true,
   underscored: true,
-  modelName: 'wishlist',
-  tableName: 'wishlists'
+  modelName: 'userProfile',
+  tableName: 'userProfiles'
 });
 
 // Sync the model with the database
 (async () => {
   try {
-    await Wishlist.sync({ alter: true });
-    console.log('Wishlist model synced successfully');
+    await UserProfile.sync({ alter: true });
+    console.log('User Profile model synced successfully');
   } catch (error) {
-    console.error('Error syncing wishlist model:', error);
+    console.error('Error syncing user profile model:', error);
   }
 })();
 
-module.exports = Wishlist;
+module.exports = UserProfile;

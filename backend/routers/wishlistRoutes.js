@@ -38,6 +38,8 @@ router.get('/:userId', async (req, res) => {
     let newArr = wishlistItems.map(item => item.dataValues);
     const wishlistItemsParsed = await transformJsonToJson(newArr); // Assuming Sequelize returns instances
     
+    wishlistItemsParsed.forEach(item => item.userId = userId);
+
     res.json(wishlistItemsParsed);
   } catch (error) {
     console.error('Error getting wishlist items:', error);
@@ -84,10 +86,11 @@ router.get('/:userId', async (req, res) => {
 // })
 
 // Route to delete an item from a user's wishlist
-router.delete('/:id', async (req, res) => {
+router.delete('/:userId/:id', async (req, res) => {
     try {
         const wishlistItemId = req.params.id;
-        await Wishlist.destroy({ where: { id: wishlistItemId } });
+        const userId = req.params.userId;
+        await Wishlist.destroy({ where: { id: wishlistItemId, userId: userId } });
         res.json({ message: 'Item deleted from wishlist successfully' });
     } catch (error) {
         console.error('Error deleting item from wishlist:', error);

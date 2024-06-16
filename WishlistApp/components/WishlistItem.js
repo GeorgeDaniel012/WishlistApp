@@ -61,7 +61,7 @@ const WishlistItem = (props) => {
     };
 
     const deleteItem = () => {
-        fetch(configData.connection + "/wishlist/" + props.object.wishlistId, {
+        fetch(configData.connection + "/wishlist/" + props.object.userId + "/" + props.object.wishlistId, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ const WishlistItem = (props) => {
             StackActions.replace('Wishlist')
         );
         
-        navigation.navigate('Profile');
+        navigation.navigate('ProfileView');
     };
 
     const viewMedia = () => {

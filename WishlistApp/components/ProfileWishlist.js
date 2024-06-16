@@ -15,7 +15,7 @@ const scaleFontSize = (size) => {
     return size * (screenWidth / baseWidth);
 };
 
-const Profile = ({ route }) => {
+const ProfileWishlist = ({ route }) => {
     const [userId, setUserId] = useState(1);
     const [searchResults, setSearchResults] = useState([]);
     const [modifiedResults, setModifiedResults] = useState([]);
@@ -369,4 +369,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Profile;
+export default ProfileWishlist;

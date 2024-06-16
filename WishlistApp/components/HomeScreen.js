@@ -3,7 +3,9 @@ import { View, Text, StyleSheet, Dimensions, ScrollView, TextInput, Button, Aler
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "@firebase/auth";
 import { initializeApp } from "@firebase/app";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { firebaseConfig } from "../config.json";
+import { firebaseConfig, connection } from "../config.json";
+import { useNavigation } from '@react-navigation/native';
+import MyButton from './MyButton';
 
 LogBox.ignoreLogs([
   /You are initializing Firebase Auth for React Native without providing AsyncStorage\./
@@ -62,7 +64,7 @@ const AuthenticatedScreen = ({ user, handleAuthentication }) => {
   );
 };
 
-const HomeScreen = ({ navigation, route }) => {
+const HomeScreen = ({ route }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null); // Track user authentication state
@@ -92,6 +94,8 @@ const HomeScreen = ({ navigation, route }) => {
 
   //   initializeUser();
   // }, [auth]);
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     const initializeUser = async () => {
@@ -172,6 +176,21 @@ const HomeScreen = ({ navigation, route }) => {
         } else {
           // Sign up
           const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+          const uid = userCredential.user.uid;
+
+          //console.log(typeof userCredential.user)
+
+          const response = await fetch(connection + '/userprofile/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: uid
+            }),
+          });
+
           setUser(userCredential.user);
           storeUser(userCredential.user); // Store user in AsyncStorage
           console.log('User created successfully!');
