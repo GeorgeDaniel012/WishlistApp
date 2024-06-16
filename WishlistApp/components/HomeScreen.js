@@ -178,11 +178,23 @@ const HomeScreen = ({ navigation, route }) => {
         }
       }
     } catch (error) {
-      console.error('Authentication error:', error.message);
-      // Handle specific error messages as per your requirements
-      // Display appropriate alerts using Alert.alert() based on error.message
+      //console.error('Authentication error:', error.message);
+      console.log(error.message)
+      if(error.message === "Firebase: Error (auth/invalid-credential)."){
+        Alert.alert("Failed", "Invalid credentials.");
+      }
+      if(error.message === "Firebase: Error (auth/invalid-email)."){
+        Alert.alert("Failed", "Invalid email.");
+      }
+      if(error.message ===
+        "Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests)."){
+        Alert.alert("Failed", "Contul ti-a fost blocat. Apeleaza-l pe George.");
+      }
+      if(error.message === "Firebase: Error (auth/email-already-in-use)."){
+        Alert.alert("Failed", "Email already in use.");
+      }
     }
-  };
+};
   
 
   return (
@@ -221,12 +233,14 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   authContainer: {
-    width: '80%',
-    maxWidth: 400,
+    width: 0.8*screenWidth,
+    //minWidth: 300,
+    //maxWidth: 400,
     backgroundColor: '#fff',
     padding: 16,
     borderRadius: 8,
     elevation: 3,
+    marginBottom: 0.2*screenHeight
   },
   title: {
     fontSize: 24,

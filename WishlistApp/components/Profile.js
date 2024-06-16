@@ -6,7 +6,14 @@ import WishlistResults from "./WishlistResults";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const windowHeight = Dimensions.get('window').height;
+// const windowHeight = Dimensions.get('window').height;
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+
+const scaleFontSize = (size) => {
+    const baseWidth = 375;
+    return size * (screenWidth / baseWidth);
+};
 
 const Profile = ({ route }) => {
     const [userId, setUserId] = useState(1);
@@ -149,7 +156,8 @@ const Profile = ({ route }) => {
     return (
       <SafeAreaView style={styles.container_main}>
         <View style={styles.header}>
-          <Text style={{fontSize: 18}}>Your wishlist contains:</Text>
+          <Text style={{fontSize: scaleFontSize(20), flexGrow:1}}>Your wishlist contains:</Text>
+          {/* <Text style={{fontSize: 18}}>{screenHeight} {screenWidth}</Text> */}
           <Button 
             onPress={() => setSettingsVisible(true)}
             title="Settings"
@@ -262,71 +270,76 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       //justifyContent: 'flex-start',
       alignItems: 'center',
-      gap: 110,
+      //gap: screenWidth*0.08,
+      flexShrink: 1,
+      //flexGrow: 1,
+      //gap: screenWidth*0.16,
+      paddingLeft: screenWidth*0.03,
+      paddingRight: screenWidth*0.03,
     },
     container: {
-        flex: 1,
-        width: '100%',
-        justifyContent: 'flex-start',
-        flexGrow: 1,
-        alignItems: 'center',
-        padding: '5%',
-        //paddingTop: windowHeight * 0.06, // Add padding to create space at the top
-        //backgroundColor: 'pink'
-      },
-      // header: {
-      //   height: 50,
-      //   backgroundColor: 'lightblue',
-      //   justifyContent: 'center',
-      //   alignItems: 'center',
-      //   width: '100%',
-      //   marginBottom: 20, // Margin between header and content
-      // },
-      content: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
-      searchContainer: {
-        flexDirection: 'row', // or 'colomn'
-        alignItems: 'center',
-      },
-      input: {
-        height: 40,
-        borderColor: 'gray',
-        borderWidth: 1,
-        paddingHorizontal: 10,
-        flex: 1, // take up remaining space
-        marginRight: 10, // margin between input and button
-      },
-      container_main: {
-        flex: 1,
-        //height: windowHeight * 0.9,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor:  '#ADD8E6',
-        height: Dimensions.get('window').height
-      },
-      // results: {
-      //   flex: 1,
-      //   width: '100%',
-      //   height: Dimensions.get('window').height*20,
-      //   flexGrow: 1,
-      //   backgroundColor: 'red',
-      //   overflow: 'scroll',
-      //   margin: 0,
-      //   paddingBottom: '100%'
-      // }
-      results: {
-        //height: 'auto'
-        height: Dimensions.get('window').height*0.81,
-        width: Dimensions.get('window').width*0.93
-      },
-      modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      flex: 1,
+      width: '100%',
+      justifyContent: 'flex-start',
+      flexGrow: 1,
+      alignItems: 'center',
+      padding: '5%',
+      //paddingTop: windowHeight * 0.06, // Add padding to create space at the top
+      //backgroundColor: 'pink'
+    },
+    // header: {
+    //   height: 50,
+    //   backgroundColor: 'lightblue',
+    //   justifyContent: 'center',
+    //   alignItems: 'center',
+    //   width: '100%',
+    //   marginBottom: 20, // Margin between header and content
+    // },
+    content: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    searchContainer: {
+      flexDirection: 'row', // or 'colomn'
+      alignItems: 'center',
+    },
+    input: {
+      height: 40,
+      borderColor: 'gray',
+      borderWidth: 1,
+      paddingHorizontal: 10,
+      flex: 1, // take up remaining space
+      marginRight: 10, // margin between input and button
+    },
+    container_main: {
+      flex: 1,
+      //height: windowHeight * 0.9,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor:  '#ADD8E6',
+      height: Dimensions.get('window').height
+    },
+    // results: {
+    //   flex: 1,
+    //   width: '100%',
+    //   height: Dimensions.get('window').height*20,
+    //   flexGrow: 1,
+    //   backgroundColor: 'red',
+    //   overflow: 'scroll',
+    //   margin: 0,
+    //   paddingBottom: '100%'
+    // }
+    results: {
+      //height: 'auto'
+      height: Dimensions.get('window').height*0.81,
+      width: Dimensions.get('window').width*0.93
+    },
+    modalContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalContent: {
         width: 300,

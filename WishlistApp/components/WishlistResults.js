@@ -3,6 +3,13 @@ import { ScrollView, View, Text, StyleSheet, TextInput, Button, Alert, Dimension
 import { SafeAreaView } from 'react-native-safe-area-context';
 import WishlistItem from './WishlistItem';
 
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+
+const scaleFontSize = (size) => {
+    const baseWidth = 375;
+    return size * (screenWidth / baseWidth);
+};
+
 const WishlistResults = (props) => {
     const resultComponents = [];
     for (let obj of props.data) {
@@ -28,7 +35,7 @@ const WishlistResults = (props) => {
             /> */}
             {
                 props.data.length === 0
-                ? <Text>Wishlist is empty.</Text>
+                ? <Text style={{fontSize: scaleFontSize(18)}}>Wishlist is empty.</Text>
                 : (
                     props.data.map((obj, index) => (
                         //<WishlistItem object={obj} key={index} loadWishlist={props.loadWishlist}/>
