@@ -8,6 +8,8 @@ import { firebaseConfig } from "../config.json";
 LogBox.ignoreLogs([
   /You are initializing Firebase Auth for React Native without providing AsyncStorage\./
 ]);
+LogBox.ignoreAllLogs();
+//LogBox.ignoreLogs(['Warning: ...']);
 
 console.disableYellowBox = true;
 
@@ -195,7 +197,7 @@ const HomeScreen = ({ navigation, route }) => {
             // Show sign-in or sign-up form if user is not authenticated
             <AuthScreen
               email={email}
-              setEmail={setEmail}
+              setEmail={setEmail}z
               password={password}
               setPassword={setPassword}
               isLogin={isLogin}
