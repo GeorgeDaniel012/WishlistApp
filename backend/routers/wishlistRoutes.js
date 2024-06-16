@@ -136,28 +136,31 @@ async function transformJsonToJson(mediaList){
     const gameMediaIds = mediaList.filter(media => media.typeOfMedia === "game").map(media => media.mediaId);
     const gameMediaStatus = mediaList.filter(media => media.typeOfMedia === "game").map(media => media.status);
     const gameWishlistIds = mediaList.filter(media => media.typeOfMedia === "game").map(media => media.id);
-    let gameMediaIdsMap={};
-    for (let i=0; i<gameMediaIds.length; i++){
-        gameMediaIdsMap[gameMediaIds[i]]=i;
-    }
-    console.log(gameWishlistIds);
-    
+    // let gameMediaIdsMap={};
+    // for (let i=0; i<gameMediaIds.length; i++){
+    //     gameMediaIdsMap[gameMediaIds[i]]=i;
+    // }
+    // console.log(gameWishlistIds);
     let resultGames = await fetchGamesInfoByIds(gameMediaIds);
     // resultGames.forEach(obj => {
     //     obj.sortId = gameMediaIdsMap[obj.id];
     //     //obj.status = gameMediaStatus[i];
     // });
-    for(let i = 0; i < resultGames.length; i++){
-        let obj = resultGames[i];
-        obj.sortId = gameMediaIdsMap[obj.id];
+    // for(let i = 0; i < resultGames.length; i++){
+    //     let obj = resultGames[i];
+        //obj.sortId = gameMediaIdsMap[obj.id];
         //obj.status = gameMediaStatus[i];
         //obj.wishlistId = gameWishlistIds[i];
-    }
+    // }
     // resultGames.sort((a, b) => a.sortId - b.sortId);
-    for(let i = 0; i < resultGames.length; i++){
-        let obj = resultGames[i];
-        obj.status = gameMediaStatus[i];
-        obj.wishlistId = gameWishlistIds[i];
+    if(resultGames){
+      for(let i = 0; i < resultGames.length; i++){
+          let obj = resultGames[i];
+          obj.status = gameMediaStatus[i];
+          obj.wishlistId = gameWishlistIds[i];
+      }
+    } else {
+      resultGames=[];
     }
     
 

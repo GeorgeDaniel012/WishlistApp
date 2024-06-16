@@ -272,7 +272,9 @@ async function fetchGameScreenshots(gameId) {
 async function fetchGamesInfoByIds(listOfIds) {
   //console.log('PLEASE HELP ME\n\n', JSON.stringify(listOfIds).replace("[", "(").replace("]", ")"));
   try {
-    
+    if(listOfIds.length == 0){
+      return [];
+    }
 
     // Make a POST request to the IGDB API
     const response = await axios({
