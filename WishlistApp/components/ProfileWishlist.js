@@ -31,8 +31,6 @@ const ProfileWishlist = ({ route }) => {
       const userString = await AsyncStorage.getItem('@user');
 
       const uid = JSON.parse(userString).uid;
-      console.log(uid);
-      console.log(userString);
       const url = configData.connection+"/wishlist/"+uid;
 
       fetch(url, {
@@ -156,7 +154,6 @@ const ProfileWishlist = ({ route }) => {
             visible={settingsVisible}
             onRequestClose={() => {
               setSettingsVisible(false);
-              console.log("applied stuff");
               //applySortFilter();
             }}
         >
@@ -187,7 +184,6 @@ const ProfileWishlist = ({ route }) => {
                                   const updatedFilter = statusFilter.includes(item.filterName)
                                     ? statusFilter.filter(status => status !== item.filterName)
                                     : [...statusFilter, item.filterName];
-                                  console.log(updatedFilter);
                                   setStatusFilter(updatedFilter);
                                 }}
                               />

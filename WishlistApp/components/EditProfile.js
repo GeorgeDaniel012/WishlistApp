@@ -69,7 +69,6 @@ const EditProfile = () => {
         isWishlistVisible: isWishlistVisible,
       });
 
-      // Handle success (e.g., show a message, navigate away, etc.)
       console.log('Profile updated successfully');
       handleRefresh();
     } catch (error) {

@@ -9,6 +9,17 @@ const {tmdbRoutes} = require('./api-calls/tmdbApiRoutes.js');
 const app = express();
 const fs = require('fs');
 
+/*
+config.json file format:
+{
+    "IGDB_CLIENT_ID" : "",
+    "IGDB_ACCESS_TOKEN" : "",
+    "TMDB_AUTHORIZATION" : "",
+    "sql_password" : "",
+    "db_name" : ""
+}
+*/
+
 let IGDB_CLIENT_ID = null;
 let IGDB_ACCESS_TOKEN = null;
 let sql_password = null;
@@ -16,6 +27,7 @@ let dbName = null;
 
 const axios = require('axios');
 
+// reading config data
 try {
   const configData = fs.readFileSync('config.json');
   const config = JSON.parse(configData);
@@ -35,28 +47,9 @@ const sequelize = new Sequelize(dbName, 'root', '', {
   password: sql_password
 });
 
-// const User = sequelize.define('User', {
-//   name: Sequelize.STRING,
-//   email: Sequelize.STRING,
-// });
-
 sequelize.sync();
 
 app.use(express.json());
-
-// Endpoints
-// app.get('/users', async (req, res) => {
-//   const users = await User.findAll();
-//   res.json(users);
-// });
-
-// app.post('/users', async (req, res) => {
-//   const { name, email } = req.body;
-//   const user = await User.create({ name, email });
-//   res.json(user);
-// });
-// app.use(bodyParser.json());
-
 
 app.use('/wishlist', wishlistRoutes);
 app.use('/igdbapi', igdbRoutes);
@@ -68,36 +61,6 @@ app.get('/', (req, res) => {
   res.send('Hello from Node.js backend!');
 });
 
-/*
-app.post('/search', (req, res) => {
-  const { query } = req.body;
-  console.log('Received search query:', query);
-
-  // Here you can process the search query (e.g., query a database, perform a search operation)
-  // For demonstration purposes, let's simply send back a response with the received query
-  res.json({ message: `Received search query: ${query}` });
-});
-
-app.use((req, res, next) => {
-  const token = req.headers.authorization;
-  if (token !== '') {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-  next();
-});
-*/
-
-app.post('/search', (req, res) => {
-  const query = req.body.query;
-  console.log('Received search query:', query);
-
-  // Here you can process the search query (e.g., query a database, perform a search operation)
-  // For demonstration purposes, let's simply send back a response with the received query
-  let message_ = 'Received search query: ' + query;
-  res.json({ message: message_});
-});
-
-
 // Route for handling other requests that require authentication
 // app.use((req, res, next) => {
 //   const token = req.headers.authorization;
@@ -107,7 +70,7 @@ app.post('/search', (req, res) => {
 //   next();
 // });
 
-// Start the server
+// Starts the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

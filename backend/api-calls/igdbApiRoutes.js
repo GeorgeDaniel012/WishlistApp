@@ -28,9 +28,6 @@ async function fetchGameInfo() {
       },
       data: 'fields name,release_dates,platforms; limit 10;'
     });
-
-    // Process the response data
-    console.log(response.data);
   } catch (error) {
     console.error('Error fetching data from IGDB API:', error);
   }

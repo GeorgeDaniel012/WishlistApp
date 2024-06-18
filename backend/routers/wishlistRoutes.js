@@ -47,6 +47,7 @@ router.get('/:userId', async (req, res) => {
   }
 });
 
+// Old route, not used anymore
 // router.get('/:userId/sortFilter', async (req, res) => {
 //   try {
 //     const userId = parseInt(req.params.userId);
@@ -98,6 +99,7 @@ router.delete('/:userId/:id', async (req, res) => {
   }
 });
 
+// Route to modify item's status in a user's wishlist
 router.put('/', async (req, res) => {
     try {
         const { id, status } = req.body;
@@ -133,29 +135,15 @@ router.put('/', async (req, res) => {
   imageUrl
 }
 */
+
+// auxiliary function that converts game and movie/tv JSONs
+// into more convenient formats for the frontend (format above!)
 async function transformJsonToJson(mediaList){
-    let newList=[];
-    console.log(mediaList);
     const gameMediaIds = mediaList.filter(media => media.typeOfMedia === "game").map(media => media.mediaId);
     const gameMediaStatus = mediaList.filter(media => media.typeOfMedia === "game").map(media => media.status);
     const gameWishlistIds = mediaList.filter(media => media.typeOfMedia === "game").map(media => media.id);
-    // let gameMediaIdsMap={};
-    // for (let i=0; i<gameMediaIds.length; i++){
-    //     gameMediaIdsMap[gameMediaIds[i]]=i;
-    // }
-    // console.log(gameWishlistIds);
+
     let resultGames = await fetchGamesInfoByIds(gameMediaIds);
-    // resultGames.forEach(obj => {
-    //     obj.sortId = gameMediaIdsMap[obj.id];
-    //     //obj.status = gameMediaStatus[i];
-    // });
-    // for(let i = 0; i < resultGames.length; i++){
-    //     let obj = resultGames[i];
-        //obj.sortId = gameMediaIdsMap[obj.id];
-        //obj.status = gameMediaStatus[i];
-        //obj.wishlistId = gameWishlistIds[i];
-    // }
-    // resultGames.sort((a, b) => a.sortId - b.sortId);
     if(resultGames){
       for(let i = 0; i < resultGames.length; i++){
           let obj = resultGames[i];
@@ -166,7 +154,6 @@ async function transformJsonToJson(mediaList){
       resultGames=[];
     }
     
-
     const movieOrTvPromises = mediaList
         .filter(media => media.typeOfMedia === 'movie' || media.typeOfMedia === 'tv')
         .map(async (media) => ({
@@ -187,8 +174,6 @@ async function transformJsonToJson(mediaList){
         wishlistId: obj.wishlistId
     }))
 
-    //const returnList = [...resultGames,...movieOrTv].sort((a, b) => a.wishlistId - b.wishlistId);
-    //console.log(returnList);
     const returnList = [...resultGames,...movieOrTv];
     for(const item of returnList){
       let statusId;
@@ -205,7 +190,7 @@ async function transformJsonToJson(mediaList){
       }
       item.statusId = statusId;
     }
-    console.log(returnList);
     return [...resultGames,...movieOrTv];
 }
+
 module.exports = router;

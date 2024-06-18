@@ -13,7 +13,6 @@ const scaleFontSize = (size) => {
 const WishlistItem = (props) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [currentStatus, setCurrentStatus] = useState(props.object.status);
-    console.log("name:", props.object.name, "status:", currentStatus);
     const [exists, setExists] = useState(true);
 
     const statuses = [

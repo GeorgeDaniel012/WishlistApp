@@ -11,34 +11,8 @@ const scaleFontSize = (size) => {
 };
 
 const WishlistItem = (props) => {
-    const [modalVisible, setModalVisible] = useState(false);
-    const [currentStatus, setCurrentStatus] = useState(props.object.status);
-    console.log("name:", props.object.name, "status:", currentStatus);
     const [exists, setExists] = useState(true);
-
-    const statuses = [
-        {
-            "id": 1,
-            "statusName": "planning",
-            "color": "#FDDA0D",
-        },
-        {
-            "id": 2,
-            "statusName": props.object.typeOfMedia === "game" ? "playing" : "watching",
-            "color": "#6495ED",
-        },
-        {
-            "id": 3,
-            "statusName": "dropped",
-            "color": "#D22B2B",
-        },
-        {
-            "id": 4,
-            "statusName": "completed",
-            "color": "#50C878",
-        }
-    ];
-
+    
     const navigation = useNavigation();
 
     const viewMedia = () => {
