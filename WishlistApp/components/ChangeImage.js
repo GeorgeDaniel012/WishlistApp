@@ -44,19 +44,16 @@ const ChangeImage = () => {
   };
 
   const uploadImage = async () => {
-    console.log("fjhjsjkf")
     if (image) {
       const formData = new FormData();
       const userId = JSON.parse(await AsyncStorage.getItem('@user')).uid;
-      console.log(userId);
       formData.append('userId', userId);
       formData.append('profileImage', {
         uri: image,
         name: 'profile.jpg',
         type: 'image/jpeg',
       });
-      console.log("aaaaaa")
-
+      
       try {
         const response_upload = await axios.post(configData.connection + '/userprofile/upload', formData, {
           headers: {

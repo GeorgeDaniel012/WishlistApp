@@ -16,18 +16,31 @@ import UserSearchPage from './components/UserSearchPage';
 import ProfileViewOther from './components/ProfileViewOther';
 import ProfileWishlistOther from './components/ProfileWishlistOther';
 
+/*
+config.json file format:
+{
+    "connection" : "http://ip:3000",
+    "client_android" : "",
+    "client_ios" : "",
+    "firebaseConfig" : {
+        "apiKey": "",
+        "authDomain": "",
+        "projectId": "",
+        "storageBucket": "",
+        "messagingSenderId": "",
+        "appId": ""
+      }
+}
+*/
+
 const Stack = createNativeStackNavigator();
 
 const App = () => {
-  // const handlePress = () => {
-  //   //Alert.alert('Button pressed!');
-  //   navigation.navigate('Search');
-  // };
-
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // hook that is executed when app is first loaded
   useEffect(() => {
     connection = configData.connection;
     fetch(connection)
@@ -48,18 +61,6 @@ const App = () => {
   }, []);
 
   return (
-    // <View style={style.container}>
-    //   {loading ? (
-    //     <Text>Loading...</Text>
-    //   ) : error ? (
-    //     <Text>Error: {error.message}</Text>
-    //   ) : (
-    //     <SafeAreaView style={style.container}>
-    //         <MyComponent />
-    //     </SafeAreaView>
-
-    //   )}
-    // </View>
     <NavigationContainer>
       <Stack.Navigator 
         initialRouteName='Wishlist'
@@ -71,7 +72,6 @@ const App = () => {
           headerTitleStyle: {
             fontWeight: 'bold',
           },
-          //headerShown: false
         }}
         >
         <Stack.Screen

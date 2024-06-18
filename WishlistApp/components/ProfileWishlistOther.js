@@ -151,7 +151,6 @@ const ProfileWishlistOther = ( props ) => {
             visible={settingsVisible}
             onRequestClose={() => {
               setSettingsVisible(false);
-              console.log("applied stuff");
               //applySortFilter();
             }}
         >
@@ -182,7 +181,6 @@ const ProfileWishlistOther = ( props ) => {
                                   const updatedFilter = statusFilter.includes(item.filterName)
                                     ? statusFilter.filter(status => status !== item.filterName)
                                     : [...statusFilter, item.filterName];
-                                  console.log(updatedFilter);
                                   setStatusFilter(updatedFilter);
                                 }}
                               />

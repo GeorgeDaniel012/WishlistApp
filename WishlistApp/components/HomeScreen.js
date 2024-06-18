@@ -122,12 +122,12 @@ const HomeScreen = ({ route }) => {
   
   }, []);
 
-  useEffect(() => {
-    async function f() {
-      console.log(await AsyncStorage.getItem('@user'));
-    }
-    f();
-  }, []);
+  // useEffect(() => {
+  //   async function f() {
+  //     console.log(await AsyncStorage.getItem('@user'));
+  //   }
+  //   f();
+  // }, []);
 
   const storeUser = async (user) => {
     try {

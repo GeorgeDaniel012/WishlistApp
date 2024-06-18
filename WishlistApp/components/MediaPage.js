@@ -42,7 +42,6 @@ const MediaPage = (props) => {
                 const data = await response.json();
                 setMediaInfo(data);
                 setIsLoading(false); // setting isLoading to false when fetch is completed
-                console.log(data);
             } catch (error) {
                 console.error('Error:', error);
                 Alert.alert('Error', 'Failed to fetch info');
@@ -63,8 +62,6 @@ const MediaPage = (props) => {
             }
 
             const uid = JSON.parse(userString).uid;
-            console.log(uid);
-            console.log(userString);
 
             const response = await fetch(configData.connection + '/wishlist/add', {
                 method: 'POST',
