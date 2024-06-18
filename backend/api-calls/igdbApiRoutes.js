@@ -4,7 +4,7 @@ const axios = require('axios');
 const express = require('express');
 const igdbRoutes = express.Router();
 
-
+// configure data for the api
 try {
   const configData = fs.readFileSync('./config.json');
   const config = JSON.parse(configData);
@@ -36,8 +36,6 @@ async function fetchGameInfo() {
   }
 }
   
-  
-  
   // Function to fetch a game by ID from IGDB API
   async function fetchGamesInfoByName(gameName) {
     try {
@@ -60,12 +58,15 @@ async function fetchGameInfo() {
     }));
 
     const gameIds = transformedArray.map(item => item.id);
-    console.log("size: ", gameIds.length);
+    //console.log("size: ", gameIds.length);
 
     if(gameIds.length === 0){
       return [];
     }
     
+    // hash map for attributing image to each gameId
+    // if image doesn't exist, it gets replaced with
+    // a default image
     let imageUrlsMap = await fetchGameImages(gameIds);
     for(let ob of transformedArray){
         if(imageUrlsMap.hasOwnProperty(ob.id)){
@@ -82,7 +83,6 @@ async function fetchGameInfo() {
     }
   }
   
-  // Call the function to fetch data
   //fetchGameInfoById(95080);
   //fetchGameInfo();
   
@@ -102,7 +102,6 @@ async function fetchGameInfo() {
       });
   
       // Process the response data
-      //console.log(response.data);
       if(response.data.length == 0){
         return;
       }
@@ -134,20 +133,11 @@ async function fetchGameInfo() {
   
       // Process the response data
       const urlsMap = response.data.reduce((acc, item) => {
-        acc[item.game] = "https:" + item.url.replace("t_thumb", "t_cover_big");
+        acc[item.game] = "https:" + item.url.replace("t_thumb", "t_cover_big"); // get higher res image
         return acc;
     }, {});
 
-      //console.log(urlsMap);
       return urlsMap;
-      //const urlsArray = response.data.map(obj => "https:" + obj.url.replace("t_thumb", "t_cover_big"));
-      //console.log(response.data);
-      //console.log(urlsArray);
-      //let urlModified = "https:" + url.replace("t_thumb", "t_cover_big");
-      //console.log(urlModified);
-
-      //console.log(urlsArray);
-      //return urlsArray;
     } catch (error) {
       console.error('Error fetching game images from IGDB API:', error);
       return null;
@@ -178,7 +168,6 @@ async function fetchGameInfoById(gameId) {
     if(typeof response.data[0].platforms !== 'undefined' && response.data[0].platforms.length != 0){
       response.data[0].platforms = await fetchPlatformNames(response.data[0].platforms);
     }
-    //console.log(imageUrl);
     if(typeof response.data[0].screenshots !== 'undefined' && response.data[0].screenshots.length != 0){
       response.data[0].screenshots = response.data[0].screenshots.map(screenshot => "https:" + screenshot.url.replace("t_thumb", "t_cover_big"));
     }
@@ -189,7 +178,7 @@ async function fetchGameInfoById(gameId) {
   }
 }
 
-
+// Fetches genre names for list of genreIds
 async function fetchGenreNames(genreIds) {
   try {
     const response = await axios({
@@ -215,6 +204,7 @@ async function fetchGenreNames(genreIds) {
 
 }
 
+// Fetches platform names for list of platformIds
 async function fetchPlatformNames(platformIds) {
   try {
     const response = await axios({
@@ -240,7 +230,7 @@ async function fetchPlatformNames(platformIds) {
 
 }
 
-
+// Fetches screenshots for gameId
 async function fetchGameScreenshots(gameId) {
   try {
     // Make a POST request to the IGDB API for artwork
@@ -270,7 +260,6 @@ async function fetchGameScreenshots(gameId) {
 }
 
 async function fetchGamesInfoByIds(listOfIds) {
-  //console.log('PLEASE HELP ME\n\n', JSON.stringify(listOfIds).replace("[", "(").replace("]", ")"));
   try {
     if(listOfIds.length == 0){
       return [];
@@ -295,14 +284,13 @@ async function fetchGamesInfoByIds(listOfIds) {
   }));
 
   const gameIds = transformedArray.map(item => item.id);
-  console.log("size: ", gameIds.length);
+  //console.log("size: ", gameIds.length);
   
   let imageUrlsMap = await fetchGameImages(gameIds);
   for(let ob of transformedArray){
       if(imageUrlsMap.hasOwnProperty(ob.id)){
           ob.imageUrl = imageUrlsMap[ob.id];
       } else {
-        // console.log(ob.imageUrl)
         ob.imageUrl = 'https://i.imgur.com/VCMGiHY.png';
       }
   }
@@ -326,6 +314,7 @@ async function fetchGamesInfoByIds(listOfIds) {
 
 //fetchGameImages([36308, 108485, 123]);
 
+// route used for searching by search string
 igdbRoutes.get('/:searchString', async (req, res) => {
     try {
         const name = req.params.searchString;
@@ -337,6 +326,7 @@ igdbRoutes.get('/:searchString', async (req, res) => {
     }
 });
 
+// route used for getting game info by id
 igdbRoutes.get('/id/:gameId', async (req, res) => {
   try {
       const id = req.params.gameId;
@@ -348,11 +338,4 @@ igdbRoutes.get('/id/:gameId', async (req, res) => {
   }
 });
 
-//igdbRoutes.get('/wishlistEntry/:')
-
-
-
-
-
-//const igdbRoutes = igdbRoutes;
 module.exports = {igdbRoutes, fetchGamesInfoByIds};

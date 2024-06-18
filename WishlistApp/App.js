@@ -88,8 +88,8 @@ const App = () => {
           //   text: 'Search' }}
           options={({ navigation }) => ({
             title: '',
-            //headerLeft: () => <GoToProfileButton navigation={navigation} page='ProfileView'/>,
-            headerLeft: () => <MyButton navigation={navigation} page='ProfileView' title='Profile'/>,
+            headerLeft: () => <GoToProfileButton navigation={navigation} page='ProfileView'/>,
+            //headerLeft: () => <MyButton navigation={navigation} page='ProfileView' title='Profile'/>,
             headerRight: () => <MyButton navigation={navigation} page='Search'/>,
             //headerRight: () => <GoToProfileButton navigation={navigation} title='Search Media' page='Search'/>,
           })}

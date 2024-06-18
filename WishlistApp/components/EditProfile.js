@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button, StyleSheet, Dimensions } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Dimensions, Switch, Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import * as configData from '../config.json';
@@ -11,6 +11,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const EditProfile = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [isWishlistVisible, setWishlistVisible] = useState(false);
 
   const navigation = useNavigation();
 
@@ -35,6 +36,7 @@ const EditProfile = () => {
         const profileResponse = await axios.get(configData.connection + '/userprofile/user/' + userId);
         setName(profileResponse.data.displayName);
         setDescription(profileResponse.data.description);
+        setWishlistVisible(profileResponse.data.isWishlistVisible);
       } catch (error) {
         console.error('Failed to fetch profile', error);
       }
@@ -62,6 +64,11 @@ const EditProfile = () => {
         description: description,
       });
 
+      await axios.put(configData.connection + '/userprofile/wishlistvisibility', {
+        userId: userId,
+        isWishlistVisible: isWishlistVisible,
+      });
+
       // Handle success (e.g., show a message, navigate away, etc.)
       console.log('Profile updated successfully');
       handleRefresh();
@@ -78,6 +85,7 @@ const EditProfile = () => {
         value={name}
         onChangeText={setName}
         placeholder="Name"
+        maxLength={30}
       />
       <TextInput
         style={styles.multilineInput}
@@ -85,7 +93,18 @@ const EditProfile = () => {
         onChangeText={setDescription}
         placeholder="Description"
         multiline={true}
+        maxLength={255}
       />
+      <View style={styles.switchContainer}>
+        <Text>Wishlist Visibility</Text>
+        <Switch
+          value={isWishlistVisible}
+          onValueChange={setWishlistVisible}
+          // trackColor={{ false: "#767577", true: "#2196F3" }}
+          // thumbColor={{false: "#f5dd4b", true: "#2196F3"}}
+          // ios_backgroundColor="#3e3e3e"
+        />
+      </View>
       <View style={styles.buttonContainer}>
         <Button title="Save Changes" onPress={saveChanges} />
       </View>
@@ -101,21 +120,32 @@ const styles = StyleSheet.create({
     backgroundColor: '#ADD8E6'
   },
   input: {
-    height: 40,
+    height: 0.05 * screenHeight,
     borderColor: 'gray',
     borderWidth: 1,
-    marginBottom: 20,
-    marginTop: 20,
-    padding: 10,
+    marginBottom: 0.02 * screenHeight,
+    marginTop: 0.02 * screenHeight,
+    padding: 0.0125 * screenHeight,
   },
   multilineInput: {
-    height: 100,  // Adjust the height as needed for multiline input
-    textAlignVertical: 'top',  // Align text at the top of the input field
+    height: 0.12 * screenHeight,
+    textAlignVertical: 'top',
     borderColor: 'gray',
     borderWidth: 1,
-    marginBottom: 20,
-    padding: 10,
+    marginBottom: 0.02 * screenHeight,
+    padding: 0.01 * screenHeight,
   },
+  switchContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 0.02 * screenHeight,
+  },
+  // switch: {
+  //   trackColor: { false: "#767577", true: "#81b0ff" },
+  //   thumbColor: isWishlistVisible ? "#f5dd4b" : "#f4f3f4",
+  //   ios_backgroundColor: "#3e3e3e",
+  // },
   buttonContainer: {
     position: 'absolute',
     bottom: 20,

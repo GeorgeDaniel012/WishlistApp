@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Button, Image, View, StyleSheet } from 'react-native';
+import { Button, Image, View, StyleSheet, Dimensions } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as configData from '../config.json';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CommonActions, useNavigation } from '@react-navigation/native';
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 const ChangeImage = () => {
   const [image, setImage] = useState(null);
@@ -104,11 +106,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#ADD8E6'
   },
   image: {
-    width: 200,
-    height: 200,
-    marginBottom: 20,
-    marginTop: 50,
-    borderRadius: 100,
+    width: screenWidth*0.6,
+    height: screenWidth*0.6,
+    //marginBottom: screenHeight*0.02,
+    marginTop: screenHeight*0.06,
+    borderRadius: screenWidth*0.6,
     alignSelf: 'center'
   },
   buttonContainer: {

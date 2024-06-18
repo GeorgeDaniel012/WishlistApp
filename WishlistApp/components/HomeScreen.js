@@ -212,6 +212,9 @@ const HomeScreen = ({ route }) => {
       if(error.message === "Firebase: Error (auth/email-already-in-use)."){
         Alert.alert("Failed", "Email already in use.");
       }
+      if(error.message === "Firebase: Password should be at least 6 characters (auth/weak-password)."){
+        Alert.alert("Failed", "Password should be at least 6 characters long.")
+      }
     }
 };
   

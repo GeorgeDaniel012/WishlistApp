@@ -37,6 +37,10 @@ const UserProfile = sequelize.define('UserProfile', {
   imageName: {
     type: DataTypes.STRING,
     allowNull: true
+  },
+  isWishlistVisible: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true
   }
 }, {
   timestamps: true,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, Button, Image, View, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, Button, Image, View, StyleSheet, Dimensions, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import * as configData from '../config.json';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,9 +21,12 @@ const ProfileViewOther = ( props ) => {
     const [imageData, setImageData] = useState(null);
     const [displayName, setDisplayName] = useState(null);
     const [description, setDescription] = useState(null);
+    const [isWishlistVisible, setWishlistVisible] = useState(false);
 
     const viewWishlist = () => {
-        navigation.navigate('ProfileWishlistOther', { userId: userId });
+        if(isWishlistVisible){
+          navigation.navigate('ProfileWishlistOther', { userId: userId });
+        }
     };
 
   useEffect(() => {
@@ -32,6 +35,7 @@ const ProfileViewOther = ( props ) => {
         const profileResponse = await axios.get(configData.connection + '/userprofile/user/' + userId);
         setDisplayName(profileResponse.data.displayName);
         setDescription(profileResponse.data.description);
+        setWishlistVisible(profileResponse.data.isWishlistVisible);
         const imageUrl = profileResponse.data.imageName;
         if (imageUrl !== null) {
           const filename = imageUrl.split('/').pop();
@@ -62,9 +66,13 @@ const ProfileViewOther = ( props ) => {
         <Text style={styles.descriptionText}>{description}</Text>
       </ScrollView>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={viewWishlist}>
-          <Text style={styles.buttonText}>View Wishlist</Text>
-        </TouchableOpacity>
+        {
+          isWishlistVisible ?
+          (<TouchableOpacity style={styles.button} onPress={viewWishlist}>
+            <Text style={styles.buttonText}>View Wishlist</Text>
+          </TouchableOpacity>)
+          : <Text style={styles.wishlistNotVisibleText}>Wishlist is not public</Text>
+        }
       </View>
     </View>
   );
@@ -117,6 +125,9 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
   },
+  wishlistNotVisibleText: {
+    fontSize: scaleFontSize(24)
+  }
 });
 
 export default ProfileViewOther;

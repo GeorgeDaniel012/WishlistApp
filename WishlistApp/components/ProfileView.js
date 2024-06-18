@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, Button, Image, View, StyleSheet, Dimensions, ScrollView } from 'react-native';
+import { Text, Button, Image, View, StyleSheet, Dimensions, ScrollView, Alert } from 'react-native';
 import * as configData from '../config.json';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -111,10 +111,7 @@ const styles = StyleSheet.create({
   button: {
     flex: 1,
     marginHorizontal: 10,
-  },
-  searchButton: {
-    // to be added later
-  },
+  }
 });
 
 export default ProfileView;
