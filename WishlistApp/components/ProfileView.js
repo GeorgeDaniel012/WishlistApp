@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, Button, Image, View, StyleSheet, Dimensions, ScrollView } from 'react-native';
+import { Text, Button, Image, View, StyleSheet, Dimensions, ScrollView, Alert } from 'react-native';
 import * as configData from '../config.json';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';

@@ -105,7 +105,7 @@ router.post('/add', async (req, res) => {
         }
       }
   
-      const newUser = await UserProfile.create({ userId, displayName: randomString, description: '', imageName: null });
+      const newUser = await UserProfile.create({ userId, displayName: randomString, description: '', imageName: null, isWishlistVisible: true });
       res.status(201).json({ message: 'User profile created successfully!' });
     } catch (error) {
       console.error('Error adding item to wishlist:', error);
@@ -167,6 +167,25 @@ router.put('/imageName', async (req, res) => {
   } catch (error) {
       console.error('Error updating user image:', error);
       res.status(500).json({ message: 'Error updating user image' });
+  }
+});
+
+router.put('/wishlistvisibility', async (req, res) => {
+  try {
+      const { userId, isWishlistVisible } = req.body;
+      console.log(req.body);
+      const existingProfile = await UserProfile.findOne({
+          where: { userId }
+      });
+
+      if(existingProfile){
+          existingProfile.isWishlistVisible = isWishlistVisible;
+          await existingProfile.save();
+      }
+      res.json({ message: 'User wishlist visibility updated successfully!' });
+  } catch (error) {
+      console.error('Error updating user wishlist visibility:', error);
+      res.status(500).json({ message: 'Error updating user wishlist visibility' });
   }
 });
 
