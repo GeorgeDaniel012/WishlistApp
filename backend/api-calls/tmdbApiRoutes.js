@@ -3,26 +3,20 @@ const axios = require('axios');
 
 const express = require('express');
 const tmdbRoutes = express.Router();
-// tmdb exclusive
-//const fetch = require('node-fetch');
 
-
+// configure data for the api
 try {
     const configData = fs.readFileSync('./config.json');
     const config = JSON.parse(configData);
     TMDB_AUTHORIZATION = config.TMDB_AUTHORIZATION;
   } catch (err) {
       console.error('Error reading config file:', err);
-  }
+}
 
-// fetch(url, options)
-//   .then(res => res.json())
-//   .then(json => console.log(json))
-//   .catch(err => console.error('error:' + err));
-
-// It used to use the IMDB ID
+// Fetches movie or TV show info by TMDB ID
 async function fetchMovieShowInfoById(mediaId, mediaType){
-    //const url = 'https://api.themoviedb.org/3/find/' + mediaId + '?external_source=imdb_id';
+    // this used to search by IMDB id instead:
+    // const url = 'https://api.themoviedb.org/3/find/' + mediaId + '?external_source=imdb_id';
 
     const url = 'https://api.themoviedb.org/3/' + mediaType + '/' + mediaId;
 
@@ -34,12 +28,12 @@ async function fetchMovieShowInfoById(mediaId, mediaType){
             Authorization: `Bearer ${TMDB_AUTHORIZATION}`
         }
     });
-    //console.log(response.data);
+
     const item = response.data;
     if(typeof item.poster_path === "undefined" || item.poster_path === null){
         item.poster_path = 'https://i.imgur.com/VCMGiHY.png';
     } else {
-        item.poster_path = 'http://image.tmdb.org/t/p/original/' + item.poster_path;
+        item.poster_path = 'http://image.tmdb.org/t/p/w342/' + item.poster_path;
     }
 
     return item;
@@ -48,7 +42,7 @@ async function fetchMovieShowInfoById(mediaId, mediaType){
 //fetchMovieShowInfoById('tt15239678');
 //fetchMovieShowInfoById(253514, 'tv');
 
-//It gives another ID, the TMDB ID?
+//It searches movies and TV shows by name
 async function fetchMovieShowInfoByName(mediaName){
     // for the first search page
     const url = 'https://api.themoviedb.org/3/search/multi?query=' + mediaName + '&include_adult=false&page=1';
@@ -86,7 +80,7 @@ async function fetchMovieShowInfoByName(mediaName){
         //imageUrl: 'http://image.tmdb.org/t/p/original/' + item.poster_path
         imageUrl: typeof item.poster_path === "undefined" || item.poster_path === null
             ? 'https://i.imgur.com/VCMGiHY.png'
-            : 'http://image.tmdb.org/t/p/original/' + item.poster_path,
+            : 'http://image.tmdb.org/t/p/w342/' + item.poster_path,
         typeOfMedia: item.media_type
     }));
 
@@ -97,6 +91,7 @@ async function fetchMovieShowInfoByName(mediaName){
 
 //fetchMovieShowInfoByName('house');
 
+// Route for searching
 tmdbRoutes.get('/:searchString', async (req, res) => {
     try {
         const name = req.params.searchString;
@@ -108,6 +103,7 @@ tmdbRoutes.get('/:searchString', async (req, res) => {
     }
 });
 
+// Route for fetching by mediaId and mediaType
 tmdbRoutes.get('/id/:mediaType/:mediaId', async (req, res) => {
     try {
         const id = req.params.mediaId;

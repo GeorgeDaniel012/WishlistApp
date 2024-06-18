@@ -111,10 +111,7 @@ const styles = StyleSheet.create({
   button: {
     flex: 1,
     marginHorizontal: 10,
-  },
-  searchButton: {
-    // to be added later
-  },
+  }
 });
 
 export default ProfileView;
