@@ -34,6 +34,10 @@ Partea de front-end a fost realizată în React-Native, iar partea de back-end �
 14) As a logged in user I want to be able to write reviews and give scores/ratings to things so that other community members can see my opinions. (nice to have)
 15) As a logged in user I want to be recommended more media similar to my tastes (consumption) so that I have more things to consume. (nice to have)
 
+## Backlog:
+
+![Backlog](./cerinte/backlog.png)
+
 ## Diagrame UML:
 
 ### Diagramă class:
