@@ -36,8 +36,10 @@ router.get('/:userId', async (req, res) => {
     const userId = req.params.userId;
     const wishlistItems = await Wishlist.findAll({ where: { userId } });
     let newArr = wishlistItems.map(item => item.dataValues);
-    const wishlistItemsParsed = await transformJsonToJson(newArr); // Assuming Sequelize returns instances
-    
+    console.log("newArr", newArr);
+    const wishlistItemsParsed = await transformJsonToJson(newArr);
+    console.log("wishlistItemsParsed", wishlistItemsParsed);
+
     wishlistItemsParsed.forEach(item => item.userId = userId);
 
     res.json(wishlistItemsParsed);
@@ -125,6 +127,7 @@ router.put('/', async (req, res) => {
   "userId"
   "typeOfMedia"
   "mediaId"
+  "status"
   "createdAt"
   "updatedAt"
 } =>
@@ -133,6 +136,9 @@ router.put('/', async (req, res) => {
   id
   typeOfMedia
   imageUrl
+  status
+  wishlistId
+  statusId
 }
 */
 
