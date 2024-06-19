@@ -6,42 +6,44 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
   getItem: jest.fn().mockResolvedValue('{"uid": 1}'),
 }));
 
-jest.mock('react-native/Libraries/Components/ActivityIndicator/ActivityIndicator', () => 'ActivityIndicator'); // Mock ActivityIndicator
+jest.mock('react-native/Libraries/Components/ActivityIndicator/ActivityIndicator', () => 'ActivityIndicator');
 
 describe('ProfileWishlist', () => {
   test('renders correctly', async () => {
     const { getByText, getByTestId } = render(<ProfileWishlist route={{}} />);
     
-    // Check if loading indicator appears
+    // Verificam daca apare indicator de loading
     expect(getByTestId('loading-indicator')).toBeTruthy();
 
-    // Wait for data to load
+    // Asteptam sa se incarce
     await waitFor(() => expect(getByTestId('loading-indicator')).toBeNull());
 
-    // Check if the "Settings" button is present
+    // Verificam existenta butonului de Settings
     expect(getByText('Settings')).toBeTruthy();
   });
 
   test('applies sort and filter correctly', async () => {
     const { getByText, getByTestId } = render(<ProfileWishlist route={{}} />);
 
-    // Wait for data to load
+    // Asteptam sa se incarce
     await waitFor(() => expect(getByTestId('loading-indicator')).toBeNull());
 
-    // Click on "Settings" button to open modal
+    // Apasa pe buton
     fireEvent.press(getByText('Settings'));
 
-    // Select a sort option from the modal
+    // Selecteaza sortare dupa type
     fireEvent.press(getByText('type'));
-    // Check if the type sorting is applied
+
+    // Verifica sortarea
     expect(getByText('type ✔️')).toBeTruthy();
 
-    // Close the modal
+    // Inchide modal-ul
     fireEvent.press(getByTestId('modal-background'));
 
-    // Add filter by status
+    // Filtreaza dupa statusul de planning
     fireEvent.press(getByText('Status: planning'));
-    // Check if status filter is applied
+
+    // Verifica filtrul de status
     expect(getByText('Status: planning')).toBeTruthy();
   });
 });
