@@ -50,13 +50,13 @@ const Wishlist = sequelize.define('Wishlist', {
 });
 
 // Sync the model with the database
-(async () => {
-  try {
-    await Wishlist.sync({ alter: true });
-    console.log('Wishlist model synced successfully');
-  } catch (error) {
-    console.error('Error syncing wishlist model:', error);
-  }
-})();
+// (async () => {
+//   try {
+//     await Wishlist.sync({ alter: true });
+//     console.log('Wishlist model synced successfully');
+//   } catch (error) {
+//     console.error('Error syncing wishlist model:', error);
+//   }
+// })();
 
 module.exports = Wishlist;

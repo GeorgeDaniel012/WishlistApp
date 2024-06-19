@@ -50,13 +50,13 @@ const UserProfile = sequelize.define('UserProfile', {
 });
 
 // Sync the model with the database
-(async () => {
-  try {
-    await UserProfile.sync({ alter: true });
-    console.log('User Profile model synced successfully');
-  } catch (error) {
-    console.error('Error syncing user profile model:', error);
-  }
-})();
+// (async () => {
+//   try {
+//     await UserProfile.sync({ alter: true });
+//     console.log('User Profile model synced successfully');
+//   } catch (error) {
+//     console.error('Error syncing user profile model:', error);
+//   }
+// })();
 
 module.exports = UserProfile;
