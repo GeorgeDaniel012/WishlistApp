@@ -65,7 +65,9 @@ const WishlistItem = (props) => {
             headers: {
               'Content-Type': 'application/json',
             },
-        }).catch(error => {
+        })
+        .then(handleRefresh)
+        .catch(error => {
             console.error('Error:', error);
             Alert.alert('Error', 'Failed to remove item from wishlist');
         });
